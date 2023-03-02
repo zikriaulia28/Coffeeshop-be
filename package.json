@@ -1,0 +1,9 @@
+{
+  "name": "toko_kopi",
+  "version": "1.0.0",
+  "description": "Aplikasi Toko Kopi",
+  "main": "index.js",
+  "scripts": {},
+  "author": "zikri",
+  "license": "ISC"
+}
