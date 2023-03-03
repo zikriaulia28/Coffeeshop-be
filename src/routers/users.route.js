@@ -1,20 +1,8 @@
 const { Router } = require("express")
-const db = require("../configs/postgre")
+const usersController = require("../controllers/users.controller")
 const usersRouter = Router()
 
 // localhost /users
-usersRouter.get("/", (req, res) => {
-  db.query("SELECT user_id, email, display_name, birth_day FROM users", (err, results) => {
-    if (err) {
-      res.status(500).json({
-        msg: "Internal Server Error",
-      })
-      return;
-    }
-    res.status(200).json({
-      data: results.rows,
-    })
-  })
-})
+usersRouter.get("/", usersController.getUsers)
 
 module.exports = usersRouter
