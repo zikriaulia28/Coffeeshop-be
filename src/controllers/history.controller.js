@@ -1,7 +1,7 @@
-const usersModel = require("../models/users.model")
-const getUsers = async (req, res) => {
+const historyModel = require("../models/history.model")
+const getHistory = async (req, res) => {
   try {
-    const result = await usersModel.getUsers()
+    const result = await historyModel.getHistory()
     res.status(200).json({
       data: result.rows,
     })
@@ -13,10 +13,10 @@ const getUsers = async (req, res) => {
   }
 }
 
-const insertUsers = async (req, res) => {
+const insertHistory = async (req, res) => {
   try {
     const { body } = req;
-    const result = await usersModel.insertUsers(body)
+    const result = await historyModel.insertHistory(body)
     res.status(201).json({
       data: result,
       msg: "Insert Success"
@@ -29,11 +29,11 @@ const insertUsers = async (req, res) => {
   }
 }
 
-const updateUsers = async (req, res) => {
+const updateHistory = async (req, res) => {
   try {
     const { params, body } = req
     console.log(params, body)
-    const result = await usersModel.updateUsers(params, body)
+    const result = await historyModel.updateHistory(params, body)
     res.status(200).json({
       data: result.rows,
       msg: "Update Success"
@@ -46,10 +46,10 @@ const updateUsers = async (req, res) => {
   }
 }
 
-const deleteUsers = async (req, res) => {
+const deleteHistory = async (req, res) => {
   try {
     const { params } = req
-    await usersModel.deleteUsers(params)
+    await historyModel.deleteHistory(params)
     res.status(200).json({
       msg: "Delete Success"
     })
@@ -61,10 +61,9 @@ const deleteUsers = async (req, res) => {
   }
 }
 
-
 module.exports = {
-  getUsers,
-  insertUsers,
-  updateUsers,
-  deleteUsers,
+  getHistory,
+  insertHistory,
+  updateHistory,
+  deleteHistory,
 }
