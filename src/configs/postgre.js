@@ -1,12 +1,15 @@
 const { Pool } = require('pg');
 //  client
 // pool
-const db = new Pool({
-  host: "localhost",
-  database: "toko_kopi",
-  port: 5432,
-  user: "zikri",
-  password: "1234",
+
+const { host, db, dbPort, user, pass } = require("./environtment.js");
+
+const postgre = new Pool({
+  host,
+  database: db,
+  port: dbPort,
+  user,
+  password: pass,
 });
 
-module.exports = db;
+module.exports = postgre;

@@ -1,15 +1,16 @@
-const { Router } = require("express")
-const productsController = require("../controllers/product.controller")
-const productsRouter = Router()
+const { Router } = require("express");
+const productsController = require("../controllers/product.controller");
+const productsRouter = Router();
 
 // Create
-productsRouter.post("/", productsController.insertProducts)
+productsRouter.post("/", productsController.insertProducts);
 // Read
-productsRouter.get("/", productsController.getProducts)
+productsRouter.get("/", productsController.getProducts);
+productsRouter.get("/:id", productsController.getProductsId);
 // Update
-productsRouter.put("/:id", productsController.updateProducts)
+productsRouter.put("/:id", productsController.updateProducts);
 // Delete
-productsRouter.delete("/:id", productsController.deleteProducts)
+productsRouter.delete("/:id", productsController.deleteProducts);
 
 
-module.exports = productsRouter
+module.exports = productsRouter;
