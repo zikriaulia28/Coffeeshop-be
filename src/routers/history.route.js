@@ -1,15 +1,15 @@
-const { Router } = require("express")
+const { Router } = require("express");
 const historyController = require("../controllers/history.controller"
-)
-const historyRouter = Router()
+);
+const historyRouter = Router();
 
 // Create 
-historyRouter.post("/", historyController.insertHistory)
+historyRouter.post("/", historyController.insertHistory);
 // Read 
-historyRouter.get("/", historyController.getHistory)
+historyRouter.get("/", historyController.getHistory);
 // Update
-historyRouter.patch("/:id", historyController.updateHistory)
+historyRouter.patch("/:id", historyController.updateHistory);
 // Delete
-historyRouter.delete("/:id", historyController.deleteHistory)
+historyRouter.delete("/:id", historyController.deleteHistory);
 
-module.exports = historyRouter
+module.exports = historyRouter;

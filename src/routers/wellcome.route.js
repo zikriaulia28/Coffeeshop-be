@@ -1,7 +1,7 @@
-const { Router } = require("express")
-const wellcomeRouter = Router()
-const wellcomeController = require("../controllers/wellcome.controller")
+const { Router } = require("express");
+const wellcomeRouter = Router();
+const wellcomeController = require("../controllers/wellcome.controller");
 
-wellcomeRouter.get("/", wellcomeController.wellcomePage)
+wellcomeRouter.get("/", wellcomeController.wellcomePage);
 
-module.exports = wellcomeRouter
+module.exports = wellcomeRouter;

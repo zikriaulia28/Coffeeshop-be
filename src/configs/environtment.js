@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 module.exports = {
   host: process.env.HOST,
   db: process.env.DB,

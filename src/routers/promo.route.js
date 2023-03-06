@@ -3,14 +3,14 @@ const promoController = require("../controllers/promo.controller");
 const promoRouter = Router();
 
 // Create
-// promoRouter.post("/", promoController.insertPromo);
+promoRouter.post("/", promoController.insertPromo);
 // Read
 promoRouter.get("/", promoController.getPromo);
-// promoRouter.get("/:id", promoController.getPromoId);
+promoRouter.get("/:id", promoController.getPromoId);
 // // Update
-// promoRouter.put("/:id", promoController.updatePromo);
+promoRouter.patch("/:id", promoController.updatePromo);
 // // Delete
-// promoRouter.delete("/:id", promoController.deleteProducts);
+promoRouter.delete("/:id", promoController.deletePromo);
 
 
 module.exports = promoRouter;

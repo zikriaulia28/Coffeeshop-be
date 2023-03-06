@@ -19,8 +19,8 @@ const getProductsId = async (req, res) => {
     const result = await productModel.getProductsId(params);
     if (result.rows.length < 1) {
       res.status(404).json({
-        msg: "Product not found",
-      })
+        msg: "Product not found"
+      });
       return;
     }
     res.status(200).json({
@@ -86,5 +86,5 @@ module.exports = {
   getProductsId,
   insertProducts,
   updateProducts,
-  deleteProducts,
+  deleteProducts
 };
