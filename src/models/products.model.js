@@ -1,8 +1,21 @@
 const db = require("../configs/postgre");
 
-const getProducts = () => {
+const getProducts = (name, limit, sort) => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT p.id, p.name, p.price, c.category FROM products p JOIN categories c ON p.category_id = c.id ORDER BY p.id ASC LIMIT 5";
+    let sql = "SELECT p.id, p.name, p.price, p.image, c.category FROM products p JOIN categories c ON p.category_id = c.id";
+    if (name) {
+      sql += ` WHERE (LOWER(p.name) LIKE '%${name.toLowerCase()}%') OR (p.name LIKE '%${name}%')`;
+    }
+    if (sort === "asc") {
+      sql += " ORDER BY p.price ASC";
+    } else if (sort === "desc") {
+      sql += " ORDER BY p.price DESC";
+    } else {
+      sql += " ORDER BY p.id ASC";
+    }
+    if (limit) {
+      sql += ` LIMIT ${limit}`;
+    }
     db.query(sql, (err, result) => {
       if (err) {
         reject(err);
@@ -12,6 +25,8 @@ const getProducts = () => {
     });
   });
 };
+
+
 
 const getProductsId = (params) => {
   return new Promise((resolve, reject) => {
@@ -54,7 +69,7 @@ const updateProducts = (params, body) => {
 
 const deleteProducts = (params) => {
   return new Promise((resolve, reject) => {
-    const sql = "DELETE FROM products WHERE id = $1";
+    const sql = "DELETE FROM products WHERE id = $1 RETURNING *";
     const values = [params.id];
     db.query(sql, values, (err, result) => {
       if (err) {

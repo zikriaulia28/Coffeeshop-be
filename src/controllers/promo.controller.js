@@ -18,7 +18,7 @@ const insertPromo = async (req, res) => {
     const { body } = req;
     const result = await promoModel.insertPromo(body);
     res.status(201).json({
-      data: result,
+      data: result.rows,
       msg: "Insert Success"
     });
   } catch (err) {
@@ -69,8 +69,9 @@ const updatePromo = async (req, res) => {
 const deletePromo = async (req, res) => {
   try {
     const { params } = req;
-    await promoModel.deletePromo(params);
+    const result = await promoModel.deletePromo(params);
     res.status(200).json({
+      data: result.rows,
       msg: "Delete Success"
     });
   } catch (err) {

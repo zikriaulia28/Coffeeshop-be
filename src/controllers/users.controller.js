@@ -18,7 +18,7 @@ const insertUsers = async (req, res) => {
     const { body } = req;
     const result = await usersModel.insertUsers(body);
     res.status(201).json({
-      data: result,
+      data: result.rows,
       msg: "Insert Success"
     });
   } catch (err) {
@@ -47,8 +47,9 @@ const updateUsers = async (req, res) => {
 const deleteUsers = async (req, res) => {
   try {
     const { params } = req;
-    await usersModel.deleteUsers(params);
+    const result = await usersModel.deleteUsers(params);
     res.status(200).json({
+      data: result.rows,
       msg: "Delete Success"
     });
   } catch (err) {

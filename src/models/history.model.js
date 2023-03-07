@@ -48,7 +48,7 @@ const updateHistory = (params, body) => {
 
 const deleteHistory = (params) => {
   return new Promise((resolve, reject) => {
-    const sql = "DELETE FROM history WHERE id = $1";
+    const sql = "DELETE FROM history WHERE id = $1 RETURNING *";
     const values = [params.id];
     db.query(sql, values, (err, result) => {
       if (err) {

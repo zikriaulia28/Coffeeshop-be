@@ -54,7 +54,7 @@ const updatePromo = (params, body) => {
 
 const deletePromo = (params) => {
   return new Promise((resolve, reject) => {
-    const sql = "DELETE FROM promo WHERE id = $1";
+    const sql = "DELETE FROM promo WHERE id = $1 RETURNING *";
     const values = [params.id];
     db.query(sql, values, (err, result) => {
       if (err) {

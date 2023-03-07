@@ -1,7 +1,10 @@
 const productModel = require("../models/products.model");
 const getProducts = async (req, res) => {
   try {
-    const result = await productModel.getProducts();
+    const name = req.query.name;
+    const limit = req.query.limit;
+    const sort = req.query.sort;
+    const result = await productModel.getProducts(name, limit, sort);
     res.status(200).json({
       data: result.rows,
     });
@@ -37,9 +40,15 @@ const getProductsId = async (req, res) => {
 const insertProducts = async (req, res) => {
   try {
     const { body } = req;
+    const { name, price } = body;
+    if (!name || !price || isNaN(price)) {
+      return res.status(400).json({
+        msg: "name and price are required",
+      });
+    }
     const result = await productModel.insertProducts(body);
     res.status(201).json({
-      data: result,
+      data: result.rows,
       msg: "Insert Success"
     });
   } catch (err) {
@@ -69,9 +78,10 @@ const updateProducts = async (req, res) => {
 const deleteProducts = async (req, res) => {
   try {
     const { params } = req;
-    await productModel.deleteProducts(params);
+    const result = await productModel.deleteProducts(params);
     res.status(200).json({
-      msg: "Delete Success"
+      msg: "Delete Success",
+      data: result.rows
     });
   } catch (err) {
     console.log(err.message);
