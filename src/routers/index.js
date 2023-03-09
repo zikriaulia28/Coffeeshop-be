@@ -15,11 +15,15 @@ const historyRouter = require("./history.route");
 // promo /promo
 const promoRouter = require("./promo.route");
 
+// auth /auth
+const authRouter = require("./auth.route");
+
 const masterRouter = Router();
-masterRouter.use("/", wellcomeRouter);
 masterRouter.use("/users", usersRouter);
 masterRouter.use("/products", productsRouter);
 masterRouter.use("/history", historyRouter);
 masterRouter.use("/promo", promoRouter);
+masterRouter.use("/auth", authRouter);
+masterRouter.use("/", wellcomeRouter);
 
 module.exports = masterRouter;
