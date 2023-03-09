@@ -2,7 +2,7 @@ const db = require("../configs/postgre");
 
 const getUsers = () => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT id, email, password, phone_number FROM users";
+    const sql = "SELECT id, email, password, phone_number, created_at FROM users";
     db.query(sql, (err, result) => {
       if (err) {
         reject(err);
