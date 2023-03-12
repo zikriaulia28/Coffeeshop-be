@@ -39,6 +39,14 @@ const editPassword = (newPassword, userId) => {
 };
 
 
+module.exports = {
+  userVerification,
+  getPassword,
+  editPassword,
+};
+
+
+
 
 module.exports = {
   userVerification,

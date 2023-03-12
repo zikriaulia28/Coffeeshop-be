@@ -80,7 +80,7 @@ const editPassword = async (req, res) => {
     const hashedPassword = await bcrypt.hash(body.newPassword, 10);
     await authModels.editPassword(hashedPassword, authInfo.id);
     const generateToken = () => {
-      const { id, display_name } = result.rows[0];
+      const { id, display_name } = authInfo;
       const payload = {
         id,
         display_name,
@@ -96,6 +96,7 @@ const editPassword = async (req, res) => {
     const newPayload = { id: authInfo.id };
     const newToken = generateToken(newPayload);
 
+
     res.status(200).json({
       msg: "Edit Password Success",
       token: newToken,
@@ -108,8 +109,26 @@ const editPassword = async (req, res) => {
   }
 };
 
+
+const logout = async (req, res) => {
+  try {
+    const { authInfo } = req;
+    await authModels.logout(authInfo.id);
+    res.status(200).json({
+      msg: "Logout berhasil",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal Server Error",
+    });
+  }
+};
+
+
 module.exports = {
   login,
   privateAccess,
   editPassword,
+  logout,
 };
