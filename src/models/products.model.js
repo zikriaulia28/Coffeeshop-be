@@ -1,22 +1,25 @@
 const db = require("../configs/postgre");
 
-const getProducts = (name, limit, sort) => {
+const getProducts = (q) => {
   return new Promise((resolve, reject) => {
-    let sql = "SELECT p.id, p.name, p.price, p.image, c.category_name FROM products p JOIN categories c ON p.category_id = c.id";
-    if (name) {
-      sql += ` WHERE (LOWER(p.name) LIKE '%${name.toLowerCase()}%') OR (p.name LIKE '%${name}%')`;
+    let sql = "SELECT p.id, p.name, p.price, p.image, c.category_name FROM products p JOIN categories c ON p.category_id = c.id ORDER BY ";
+    let order = "id ASC";
+    if (q.order === "cheapest") {
+      order = "price ASC";
     }
-    if (sort === "asc") {
-      sql += " ORDER BY p.price ASC";
-    } else if (sort === "desc") {
-      sql += " ORDER BY p.price DESC";
-    } else {
-      sql += " ORDER BY p.id ASC";
+    if (q.order === "priciest") {
+      order = "price DESC";
     }
-    if (limit) {
-      sql += ` LIMIT ${limit}`;
-    }
-    db.query(sql, (err, result) => {
+    sql += order;
+
+    const limit = parseInt(q.limit) || 5;
+    const page = parseInt(q.page) || 1;
+    const offset = (page - 1) * limit;
+
+    sql += " LIMIT $1 OFFSET $2";
+    const values = [limit, offset];
+
+    db.query(sql, values, (err, result) => {
       if (err) {
         reject(err);
         return;
@@ -26,7 +29,41 @@ const getProducts = (name, limit, sort) => {
   });
 };
 
+const getMetaProducts = (q) => {
+  return new Promise((resolve, reject) => {
+    let sql = "SELECT COUNT(*) as total_data FROM products";
+    db.query(sql, (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const totalData = parseInt(result.rows[0].total_data);
+      const page = parseInt(q.page) || 1;
+      const limit = parseInt(q.limit) || 5;
+      const totalPage = Math.ceil(totalData / limit);
+      let next = "";
+      let prev = "";
+      // Jika halaman saat ini lebih besar dari 1, maka halaman sebelumnya tersedia
+      if (page > 1) {
+        // Membuat URL yang mengarah ke halaman sebelumnya
+        prev = `?page=${page - 1}&limit=${limit}`;
+      }
+      // Jika halaman saat ini kurang dari total halaman yang tersedia, maka halaman selanjutnya tersedia
+      if (page < totalPage) {
+        // Membuat URL yang mengarah ke halaman selanjutnya
+        next = `?page=${page + 1}&limit=${limit}`;
+      }
 
+      const meta = {
+        totalData,
+        next,
+        prev,
+        totalPage,
+      };
+      resolve(meta);
+    });
+  });
+};
 
 const getProductsId = (params) => {
   return new Promise((resolve, reject) => {
@@ -88,4 +125,5 @@ module.exports = {
   insertProducts,
   updateProducts,
   deleteProducts,
+  getMetaProducts,
 };

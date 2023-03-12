@@ -1,17 +1,25 @@
 const productModel = require("../models/products.model");
+
 const getProducts = async (req, res) => {
   try {
-    const name = req.query.name;
-    const limit = req.query.limit;
-    const sort = req.query.sort;
-    const result = await productModel.getProducts(name, limit, sort);
+    const { query } = req;
+    const result = await productModel.getProducts(query);
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        data: result.rows,
+        msg: "Product Tidak Ditemukan",
+      });
+      return;
+    }
+    const meta = await productModel.getMetaProducts(query);
     res.status(200).json({
       data: result.rows,
+      meta,
     });
   } catch (err) {
     console.log(err.message);
     res.status(500).json({
-      msg: "Internal server error",
+      msg: "Internal Server Error",
     });
   }
 };
