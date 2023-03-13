@@ -109,14 +109,20 @@ const editPassword = async (req, res) => {
   }
 };
 
-
-const logout = async (req, res) => {
+const checkRole = async (req, res, next) => {
+  // ambil user id => via user id di payload jwt token
+  const { authInfo } = req;
   try {
-    const { authInfo } = req;
-    await authModels.logout(authInfo.id);
-    res.status(200).json({
-      msg: "Logout berhasil",
-    });
+    const result = await authModels.getUserRole(authInfo.id);
+    const roleFromDb = result.rows[0].role_id;
+    console.log(roleFromDb);
+    if (roleFromDb == 1) {
+      next();
+    } else {
+      res.status(403).json({
+        msg: "Anda tidak memiliki akses pada halaman ini"
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -125,10 +131,9 @@ const logout = async (req, res) => {
   }
 };
 
-
 module.exports = {
   login,
   privateAccess,
   editPassword,
-  logout,
+  checkRole,
 };

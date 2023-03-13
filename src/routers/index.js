@@ -22,9 +22,12 @@ const promoRouter = require("./promo.route");
 // auth /auth
 const authRouter = require("./auth.route");
 
+const { checkToken } = require("../middlewares/auth");
+const { checkRole } = require("../controllers/auth.controller");
+
 const masterRouter = Router();
 masterRouter.use("/users", usersRouter);
-masterRouter.use("/products", productsRouter);
+masterRouter.use("/products", checkToken, checkRole, productsRouter);
 masterRouter.use("/transactions", transactionsRouter);
 masterRouter.use("/history", historyRouter);
 masterRouter.use("/promo", promoRouter);

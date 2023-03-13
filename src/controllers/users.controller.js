@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const usersModel = require("../models/users.model");
 const getUsers = async (req, res) => {
   try {
@@ -15,8 +16,11 @@ const getUsers = async (req, res) => {
 
 const insertUsers = async (req, res) => {
   try {
-    const { body } = req;
-    const result = await usersModel.insertUsers(body);
+    const result = await usersModel.insertUsers({
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, 10),
+      phone_number: req.body.phone_number,
+    });
     res.status(201).json({
       data: result.rows,
       msg: "Insert Success"
