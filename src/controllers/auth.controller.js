@@ -115,8 +115,7 @@ const checkRole = async (req, res, next) => {
   try {
     const result = await authModels.getUserRole(authInfo.id);
     const roleFromDb = result.rows[0].role_id;
-    console.log(roleFromDb);
-    if (roleFromDb == 1) {
+    if (roleFromDb === 1) {
       next();
     } else {
       res.status(403).json({

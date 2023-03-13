@@ -23,7 +23,7 @@ const insertUsers = async (req, res) => {
     });
     res.status(201).json({
       data: result.rows,
-      msg: "Insert Success"
+      msg: "Register successful"
     });
   } catch (err) {
     res.status(500).json({

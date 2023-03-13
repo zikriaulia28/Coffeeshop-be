@@ -23,15 +23,15 @@ const promoRouter = require("./promo.route");
 const authRouter = require("./auth.route");
 
 const { checkToken } = require("../middlewares/auth");
-const { checkRole } = require("../controllers/auth.controller");
+
 
 const masterRouter = Router();
-masterRouter.use("/users", usersRouter);
-masterRouter.use("/products", checkToken, checkRole, productsRouter);
-masterRouter.use("/transactions", transactionsRouter);
+masterRouter.use("/users", checkToken, usersRouter);
+masterRouter.use("/products", checkToken, productsRouter);
+masterRouter.use("/transactions", checkToken, transactionsRouter);
 masterRouter.use("/history", historyRouter);
 masterRouter.use("/promo", promoRouter);
 masterRouter.use("/auth", authRouter);
-masterRouter.use("/", wellcomeRouter);
+masterRouter.use("/", checkToken, wellcomeRouter);
 
 module.exports = masterRouter;

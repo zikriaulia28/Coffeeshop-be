@@ -90,15 +90,52 @@ const insertProducts = (data) => {
   });
 };
 
-const updateProducts = (params, body) => {
+const updateProducts = (params, body, fileLink) => {
   return new Promise((resolve, reject) => {
-    const sql = "UPDATE products SET name = $1, price = $2 WHERE id = $3 RETURNING *";
-    const values = [body.name, body.price, params.id];
+    const conditions = [];
+    const values = [];
+    let index = 1;
+
+    if (body.name) {
+      conditions.push(`name = $${index++}`);
+      values.push(body.name);
+    }
+
+    if (body.price) {
+      conditions.push(`price = $${index++}`);
+      values.push(body.price);
+    }
+
+    if (fileLink) {
+      conditions.push(`image = $${index++}`);
+      values.push(fileLink);
+    }
+
+    if (conditions.length === 0) {
+      return null; // tidak ada kondisi yang diberikan
+    }
+
+    const now = new Date(); // Mendapatkan waktu saat ini
+    conditions.push(`updated_at = $${index++}`);
+    values.push(now);
+
+    const sql = `UPDATE products SET ${conditions.join(", ")} WHERE id = $${index} RETURNING *`;
+    values.push(params.id);
     db.query(sql, values, (err, result) => {
       if (err) {
         reject(err);
         return;
       }
+      resolve(result);
+    });
+  });
+};
+
+const updateImageProducts = (fileLink, id) => {
+  return new Promise((resolve, reject) => {
+    const sql = "UPDATE products SET image = $1 WHERE id = $2 RETURNING *";
+    db.query(sql, [fileLink, id], (err, result) => {
+      if (err) return reject(err);
       resolve(result);
     });
   });
@@ -126,4 +163,5 @@ module.exports = {
   updateProducts,
   deleteProducts,
   getMetaProducts,
+  updateImageProducts,
 };

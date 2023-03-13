@@ -68,9 +68,20 @@ const insertProducts = async (req, res) => {
 };
 
 const updateProducts = async (req, res) => {
+  let fileLink;
+  if (req.file) {
+    fileLink = `/images/${req.file.filename}`;
+  }
   try {
     const { params, body } = req;
-    const result = await productModel.updateProducts(params, body);
+    if (!fileLink && !body.name && !body.price) {
+      // Jika tidak ada perubahan yang diberikan, maka kembalikan response kosong
+      return res.status(200).json({
+        data: [],
+        msg: "No update is performed",
+      });
+    }
+    const result = await productModel.updateProducts(params, body, fileLink);
     res.status(200).json({
       data: result.rows,
       msg: "Update Success"
@@ -82,6 +93,24 @@ const updateProducts = async (req, res) => {
     });
   }
 };
+
+const patchImageProducts = async (req, res) => {
+  console.log(req.file);
+  const fileLink = `/images/${req.file.filename}`;
+  try {
+    const result = await productModel.updateImageProducts(fileLink, req.params.id);
+    res.status(200).json({
+      data: result.rows,
+      msg: "Success Updating Image",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      msg: "Internal Server Error",
+    });
+  }
+};
+
 
 const deleteProducts = async (req, res) => {
   try {
@@ -104,5 +133,6 @@ module.exports = {
   getProductsId,
   insertProducts,
   updateProducts,
+  patchImageProducts,
   deleteProducts
 };
