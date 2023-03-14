@@ -46,12 +46,12 @@ const getMetaProducts = (q) => {
       // Jika halaman saat ini lebih besar dari 1, maka halaman sebelumnya tersedia
       if (page > 1) {
         // Membuat URL yang mengarah ke halaman sebelumnya
-        prev = `?page=${page - 1}&limit=${limit}`;
+        prev = `localhost:8080/products?page=${page - 1}&limit=${limit}`;
       }
       // Jika halaman saat ini kurang dari total halaman yang tersedia, maka halaman selanjutnya tersedia
       if (page < totalPage) {
         // Membuat URL yang mengarah ke halaman selanjutnya
-        next = `?page=${page + 1}&limit=${limit}`;
+        next = `localhost:8080/products?page=${page + 1}&limit=${limit}`;
       }
 
       const meta = {
@@ -64,6 +64,7 @@ const getMetaProducts = (q) => {
     });
   });
 };
+
 
 const getProductsId = (params) => {
   return new Promise((resolve, reject) => {
@@ -79,16 +80,17 @@ const getProductsId = (params) => {
   });
 };
 
-const insertProducts = (data) => {
+const insertProducts = (data, fileLink) => {
   return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO products (name, price) VALUES ($1, $2) RETURNING *";
-    const values = [data.name, data.price];
+    const sql = "INSERT INTO products (name, price, image, category_id) VALUES ($1, $2, $3, $4) RETURNING *";
+    const values = [data.name, data.price, fileLink, data.category_id];
     db.query(sql, values, (err, result) => {
       if (err) return reject(err);
       resolve(result);
     });
   });
 };
+
 
 const updateProducts = (params, body, fileLink) => {
   return new Promise((resolve, reject) => {

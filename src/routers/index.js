@@ -14,8 +14,6 @@ const productsRouter = require("./products.route");
 // transactions /transactions
 const transactionsRouter = require("./transactions.route");
 
-// history /history
-const historyRouter = require("./history.route");
 // promo /promo
 const promoRouter = require("./promo.route");
 
@@ -27,9 +25,8 @@ const { checkToken } = require("../middlewares/auth");
 
 const masterRouter = Router();
 masterRouter.use("/users", checkToken, usersRouter);
-masterRouter.use("/products", checkToken, productsRouter);
+masterRouter.use("/products", productsRouter);
 masterRouter.use("/transactions", checkToken, transactionsRouter);
-masterRouter.use("/history", historyRouter);
 masterRouter.use("/promo", promoRouter);
 masterRouter.use("/auth", authRouter);
 masterRouter.use("/", checkToken, wellcomeRouter);

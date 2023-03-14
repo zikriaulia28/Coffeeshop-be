@@ -15,4 +15,8 @@ authRouter.patch("/", authMiddleware.checkToken, authController.editPassword);
 // private 
 authRouter.get("/private", authMiddleware.checkToken, authController.privateAccess);
 
+// logout
+authRouter.delete("/logout", authMiddleware.deleteToken);
+
+
 module.exports = authRouter;

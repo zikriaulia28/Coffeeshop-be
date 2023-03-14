@@ -46,26 +46,28 @@ const getProductsId = async (req, res) => {
 };
 
 const insertProducts = async (req, res) => {
+  let fileLink;
+  if (req.file) {
+    fileLink = `/images/${req.file.filename}`;
+  }
   try {
     const { body } = req;
-    const { name, price } = body;
-    if (!name || !price || isNaN(price)) {
-      return res.status(400).json({
-        msg: "name and price are required",
-      });
+    if (!body || !fileLink) {
+      return res.status(400).json({ msg: "Input cannot be empty" });
     }
-    const result = await productModel.insertProducts(body);
+    const result = await productModel.insertProducts(body, fileLink);
     res.status(201).json({
-      data: result.rows,
-      msg: "Insert Success"
+      data: result.rows[0],
+      msg: "Insert success"
     });
   } catch (err) {
     console.log(err.message);
     res.status(500).json({
-      msg: "Internal server error",
+      msg: "Terjadi kesalahan pada server",
     });
   }
 };
+
 
 const updateProducts = async (req, res) => {
   let fileLink;

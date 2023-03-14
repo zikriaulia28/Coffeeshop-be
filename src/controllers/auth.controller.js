@@ -35,7 +35,7 @@ const login = async (req, res) => {
       payload,
       jwtSecret,
       jwtOptions,
-      (err, token) => {
+      async (err, token) => {
         if (err) throw err;
         res.status(200).json({
           msg: "Selamat Datang",
@@ -58,6 +58,7 @@ const privateAccess = (req, res) => {
   });
 };
 
+
 const editPassword = async (req, res) => {
   // ambil user id => via user id di payload jwt token
   // cek password lama => pwd lama via body
@@ -65,11 +66,6 @@ const editPassword = async (req, res) => {
   try {
     const result = await authModels.getPassword(authInfo.id);
     const passFromDb = result.rows[0].password;
-    // jika tidak valid, maka ditolak
-    // if (body.oldPassword !== passFromDb)
-    //   return res.status(403).json({
-    //     msg: "Password Lama Salah"
-    //   });
     const isPasswordValid = await bcrypt.compare(body.oldPassword, passFromDb);
     if (!isPasswordValid)
       return res.status(403).json({
@@ -88,14 +84,13 @@ const editPassword = async (req, res) => {
       const jwtOptions = {
         expiresIn: "5m",
       };
-      const token = jwt.sign(payload, jwtSecret, jwtOptions);
+      const token = jwt.sign(payload, jwtSecret, jwtOptions,);
       return token;
     };
 
     // buat token baru
     const newPayload = { id: authInfo.id };
     const newToken = generateToken(newPayload);
-
 
     res.status(200).json({
       msg: "Edit Password Success",

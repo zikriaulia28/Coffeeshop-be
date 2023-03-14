@@ -4,18 +4,19 @@ const productsRouter = Router();
 
 const { singleUpload } = require("../middlewares/diskUpload");
 const { checkRole } = require("../controllers/auth.controller");
+const { checkToken } = require("../middlewares/auth");
 
 
 
 // Create
-productsRouter.post("/", checkRole, productsController.insertProducts);
+productsRouter.post("/", checkToken, checkRole, singleUpload("image"), productsController.insertProducts);
 // Read
 productsRouter.get("/", productsController.getProducts);
 productsRouter.get("/:id", productsController.getProductsId);
 // Update
-productsRouter.patch("/:id", checkRole, singleUpload("image"), productsController.updateProducts);
+productsRouter.patch("/:id", checkToken, checkRole, singleUpload("image"), productsController.updateProducts);
 // Delete
-productsRouter.delete("/:id", checkRole, productsController.deleteProducts);
+productsRouter.delete("/:id", checkToken, checkRole, productsController.deleteProducts);
 
 
 module.exports = productsRouter;
