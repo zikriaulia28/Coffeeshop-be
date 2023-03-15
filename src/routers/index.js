@@ -24,11 +24,11 @@ const { checkToken } = require("../middlewares/auth");
 
 
 const masterRouter = Router();
-masterRouter.use("/users", checkToken, usersRouter);
+masterRouter.use("/users", usersRouter);
 masterRouter.use("/products", productsRouter);
 masterRouter.use("/transactions", checkToken, transactionsRouter);
 masterRouter.use("/promo", promoRouter);
 masterRouter.use("/auth", authRouter);
-masterRouter.use("/", checkToken, wellcomeRouter);
+masterRouter.use("/", wellcomeRouter);
 
 module.exports = masterRouter;

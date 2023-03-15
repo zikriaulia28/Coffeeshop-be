@@ -20,9 +20,14 @@ const limits = 2e6; // 2 x 10^6
 const fileFilter = (req, file, cb) => {
   const pattern = /jpg|png|webp/i;
   const ext = path.extname(file.originalname);
-  if (!pattern.test(ext)) return cb(null, false);
+  if (!pattern.test(ext)) {
+    const error = new Error("Tipe file tidak valid. Hanya file JPG, PNG, dan WEBP yang diizinkan.");
+    error.status = 400; // Tambahkan kode status pada objek error
+    return cb(error, false);
+  }
   cb(null, true);
 };
+
 
 const upload = multer({
   storage,
