@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const limits = 2e6; // 2 x 10^6
+const limits = 10 * 1024 * 1024;// 10 MB
 
 const fileFilter = (req, file, cb) => {
   const pattern = /jpg|png|webp/i;
@@ -34,6 +34,7 @@ const upload = multer({
   limits,
   fileFilter,
 });
+
 
 
 module.exports = {

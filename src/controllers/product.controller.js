@@ -1,4 +1,6 @@
 const productModel = require("../models/products.model");
+const { uploader } = require("../utils/cloudinary");
+
 
 const getProducts = async (req, res) => {
   try {
@@ -64,6 +66,21 @@ const insertProducts = async (req, res) => {
     console.log(err.message);
     res.status(500).json({
       msg: "Terjadi kesalahan pada server",
+    });
+  }
+};
+
+const cloudUpload = async (req, res) => {
+  try {
+    // upload ke cloud
+    const { data, err, msg } = await uploader(req, "Welcome", 1);
+    if (err) throw { msg, Error };
+    if (!data) return res.status(200).json({ msg: "No File Uploaded" });
+    res.status(201).json({ data, msg });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      msg: "Internal server error",
     });
   }
 };
@@ -136,5 +153,6 @@ module.exports = {
   insertProducts,
   updateProducts,
   patchImageProducts,
-  deleteProducts
+  deleteProducts,
+  cloudUpload,
 };
