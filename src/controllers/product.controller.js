@@ -73,8 +73,8 @@ const insertProducts = async (req, res) => {
 const cloudUpload = async (req, res) => {
   try {
     // upload ke cloud
-    const { params } = req;
-    const { data, err, msg } = await uploader(req, "Welcome", params);
+    const { id } = req;
+    const { data, err, msg } = await uploader(req, "Welcome", id);
     if (err) throw { msg, Error };
     if (!data) return res.status(200).json({ msg: "No File Uploaded" });
     res.status(201).json({ data, msg });
