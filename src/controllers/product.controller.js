@@ -117,7 +117,7 @@ const updateProducts = async (req, res) => {
   try {
     let fileLink;
     if (req.file) {
-      // Upload file to cloud
+      // Unggah file ke cloud
       const cloudResult = await cloudUpload(req, res);
       fileLink = cloudResult.data.url;
     }
@@ -127,13 +127,13 @@ const updateProducts = async (req, res) => {
       // Jika tidak ada perubahan yang diberikan, maka kembalikan response kosong
       return res.status(200).json({
         data: [],
-        msg: "No update is performed",
+        msg: "Tidak ada perubahan yang dilakukan",
       });
     }
-    const result = await productModel.updateProducts(params, body, fileLink);
+    const result = await productModel.updateProducts(params, body, fileLink); // sertakan fileLink pada pemanggilan productModel.updateProducts
     res.status(200).json({
       data: result.rows,
-      msg: "Update Success"
+      msg: "Update Berhasil"
     });
   } catch (err) {
     console.log(err.message);
@@ -142,6 +142,7 @@ const updateProducts = async (req, res) => {
     });
   }
 };
+
 
 
 const patchImageProducts = async (req, res) => {
