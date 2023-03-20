@@ -17,7 +17,7 @@ productsRouter.get("/", productsController.getProducts);
 productsRouter.get("/:id", productsController.getProductsId);
 // Update
 // productsRouter.patch("/:id", checkToken, checkRole, singleUpload("image"), productsController.updateProducts);
-productsRouter.patch("/:id", checkToken, checkRole, memoryUpload.single("image"), productsController.updateProducts);
+productsRouter.patch("/:id", checkToken, checkRole, memoryUpload.single("image"), productsController.cloudUpload, productsController.updateProducts);
 // Delete
 productsRouter.delete("/:id", checkToken, checkRole, productsController.deleteProducts);
 
