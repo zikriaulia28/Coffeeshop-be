@@ -11,7 +11,7 @@ const memoryUpload = require("../middlewares/memoryUpload");
 
 // Create
 // productsRouter.post("/", checkToken, checkRole, singleUpload("image"), productsController.insertProducts);
-productsRouter.post("/", checkToken, checkRole, memoryUpload.single("image"), productsController.insertProducts);
+productsRouter.post("/", checkToken, checkRole, memoryUpload.single("image"), productsController.cloudUpload, productsController.insertProducts);
 // Read
 productsRouter.get("/", productsController.getProducts);
 productsRouter.get("/:id", productsController.getProductsId);
