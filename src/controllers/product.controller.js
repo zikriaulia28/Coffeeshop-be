@@ -87,12 +87,42 @@ const cloudUpload = async (req, res) => {
 };
 
 
+// const updateProducts = async (req, res) => {
+//   let fileLink;
+//   if (req.file) {
+//     fileLink = `/images/${req.file.filename}`;
+//   }
+//   try {
+//     const { params, body } = req;
+//     if (!fileLink && !body.name && !body.price) {
+//       // Jika tidak ada perubahan yang diberikan, maka kembalikan response kosong
+//       return res.status(200).json({
+//         data: [],
+//         msg: "No update is performed",
+//       });
+//     }
+//     const result = await productModel.updateProducts(params, body, fileLink);
+//     res.status(200).json({
+//       data: result.rows,
+//       msg: "Update Success"
+//     });
+//   } catch (err) {
+//     console.log(err.message);
+//     res.status(500).json({
+//       msg: "Internal server error",
+//     });
+//   }
+// };
+
 const updateProducts = async (req, res) => {
-  let fileLink;
-  if (req.file) {
-    fileLink = `/images/${req.file.filename}`;
-  }
   try {
+    let fileLink;
+    if (req.file) {
+      // Upload file to cloud
+      const cloudResult = await cloudUpload(req, res);
+      fileLink = cloudResult.data.url;
+    }
+
     const { params, body } = req;
     if (!fileLink && !body.name && !body.price) {
       // Jika tidak ada perubahan yang diberikan, maka kembalikan response kosong
@@ -113,6 +143,7 @@ const updateProducts = async (req, res) => {
     });
   }
 };
+
 
 const patchImageProducts = async (req, res) => {
   console.log(req.file);
