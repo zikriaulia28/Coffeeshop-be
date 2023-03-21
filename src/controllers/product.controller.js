@@ -48,11 +48,14 @@ const getProductsId = async (req, res) => {
 };
 
 const insertProducts = async (req, res) => {
-  let fileLink;
-  if (req.file) {
-    fileLink = `/images/${req.file.filename}`;
-  }
   try {
+    let fileLink;
+    if (req.file) {
+      // Unggah file ke cloud
+      const randomId = Math.random().toString(36).substring(2, 7);
+      const cloudResult = await cloudUpload(req, res, { prefix: "product", id: randomId });
+      fileLink = cloudResult.secure_url;
+    }
     const { body } = req;
     if (!body || !fileLink) {
       return res.status(400).json({ msg: "Input cannot be empty" });
@@ -70,14 +73,14 @@ const insertProducts = async (req, res) => {
   }
 };
 
-const cloudUpload = async (req, res) => {
+const cloudUpload = async (req, res, filename) => {
   try {
     // upload ke cloud
-    const { data, err, msg } = await uploader(req, "wellcome", 1);
+    const { prefix, id } = filename;
+    const { data, err, msg } = await uploader(req, prefix, id);
     if (err) throw { msg, Error };
     if (!data) return res.status(200).json({ msg: "No File Uploaded" });
-    res.status(201).json({ data, msg });
-    console.log(data);
+    return data;
   } catch (error) {
     console.log(error.message);
     res.status(500).json({
@@ -87,40 +90,13 @@ const cloudUpload = async (req, res) => {
 };
 
 
-// const updateProducts = async (req, res) => {
-//   let fileLink;
-//   if (req.file) {
-//     fileLink = `/images/${req.file.filename}`;
-//   }
-//   try {
-//     const { params, body } = req;
-//     if (!fileLink && !body.name && !body.price) {
-//       // Jika tidak ada perubahan yang diberikan, maka kembalikan response kosong
-//       return res.status(200).json({
-//         data: [],
-//         msg: "No update is performed",
-//       });
-//     }
-//     const result = await productModel.updateProducts(params, body, fileLink);
-//     res.status(200).json({
-//       data: result.rows,
-//       msg: "Update Success"
-//     });
-//   } catch (err) {
-//     console.log(err.message);
-//     res.status(500).json({
-//       msg: "Internal server error",
-//     });
-//   }
-// };
-
 const updateProducts = async (req, res) => {
   try {
     let fileLink;
     if (req.file) {
       // Unggah file ke cloud
-      const cloudResult = await cloudUpload(req, res);
-      fileLink = cloudResult.data.url;
+      const cloudResult = await cloudUpload(req, res, { prefix: "product", id: req.params.id });
+      fileLink = cloudResult.secure_url;
     }
 
     const { params, body } = req;
