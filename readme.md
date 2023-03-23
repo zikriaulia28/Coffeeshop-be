@@ -4,14 +4,6 @@
 
 <p align="center"><img src="https://img.shields.io/badge/node.js-v.18.14.2-brightgreen" alt="shields"><img src="https://img.shields.io/badge/express.js-v.4.18.2-brightgreen" alt="shields"><img src="https://img.shields.io/badge/dotenv-v.16.0.3-brightgreen" alt="shields"><img src="https://img.shields.io/badge/pg-v.8.9.0-brightgreen" alt="shields"><img src="https://img.shields.io/badge/nodemon-v.2.0.21-brightgreen" alt="shields"><img src="https://img.shields.io/badge/eslint-v.8.35.0-brightgreen" alt="shields"></p>
 
-<h2>Project Screenshots:</h2>
-
-<img src="" alt="project-screenshot" width="400" height="400/">
-
-<h2>🧐 Features</h2>
-
-Here're some of the project's best features:
-
 <h2>🛠️ Installation Steps:</h2>
 
 <p>1. Clone This Repository</p>
