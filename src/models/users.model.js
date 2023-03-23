@@ -44,10 +44,48 @@ const insertUsers = (data) => {
   });
 };
 
-const updateUsers = (params, body) => {
+const updateUsers = (params, body, fileLink) => {
   return new Promise((resolve, reject) => {
-    const sql = "UPDATE users SET email = $1, password = $2, phone_number = $3 WHERE id = $4 RETURNING *";
-    const values = [body.email, body.password, body.phone_number, params.id];
+    const conditions = [];
+    const values = [];
+    let index = 1;
+
+    if (body.display_name) {
+      conditions.push(`display_name = $${index++}`);
+      values.push(body.display_name);
+    }
+
+    if (body.firstname) {
+      conditions.push(`firstname = $${index++}`);
+      values.push(body.firstname);
+    }
+
+    if (body.lastname) {
+      conditions.push(`lastname = $${index++}`);
+      values.push(body.lastname);
+    }
+
+    if (body.address) {
+      conditions.push(`address = $${index++}`);
+      values.push(body.address);
+    }
+
+    if (body.birth_day) {
+      conditions.push(`birth_day = $${index++}`);
+      values.push(body.birth_day);
+    }
+
+    if (fileLink) {
+      conditions.push(`image = $${index++}`);
+      values.push(fileLink);
+    }
+
+    if (conditions.length === 0) {
+      return null; // tidak ada kondisi yang diberikan
+    }
+
+    const sql = `UPDATE profile SET ${conditions.join(", ")}  WHERE user_id = $${index} RETURNING *`;
+    values.push(params.id);
     db.query(sql, values, (err, result) => {
       if (err) {
         reject(err);

@@ -3,7 +3,7 @@ const path = require("path");
 
 const storage = multer.memoryStorage();
 
-const limits = 2 * 1024 * 1024; // 2 MB
+const limits = 2 * 1024 * 1024; // 2 MBx
 
 const fileFilter = (req, file, cb) => {
   const pattern = /png|jpg|jpeg|webp/i;

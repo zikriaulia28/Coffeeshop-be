@@ -1,5 +1,8 @@
 const bcrypt = require("bcrypt");
 const usersModel = require("../models/users.model");
+const { uploader } = require("../utils/cloudinary");
+
+
 const getUsers = async (req, res) => {
   try {
     const result = await usersModel.getUsers();
@@ -54,8 +57,15 @@ const insertUsers = async (req, res) => {
 
 const updateUsers = async (req, res) => {
   try {
-    const { params, body } = req;
-    const result = await usersModel.updateUsers(params, body);
+    const { params, body, file } = req;
+    const { data, err, msg } = await uploader(req, "users", params.id);
+    if (err) throw { msg, err };
+
+    if (!file) return res.status(400).json({
+      msg: "Image Is Required"
+    });
+    const fileLink = data.secure_url;
+    const result = await usersModel.updateUsers(params, body, fileLink);
     res.status(200).json({
       data: result.rows,
       msg: "Update Success"
