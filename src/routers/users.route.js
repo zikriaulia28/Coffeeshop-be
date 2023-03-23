@@ -6,6 +6,7 @@ const usersRouter = Router();
 usersRouter.post("/", usersController.insertUsers);
 // Read
 usersRouter.get("/", usersController.getUsers);
+usersRouter.get("/:id", usersController.getUserDetail);
 // Update
 usersRouter.patch("/:id", usersController.updateUsers);
 // Delete

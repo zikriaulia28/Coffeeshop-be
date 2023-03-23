@@ -14,6 +14,26 @@ const getUsers = async (req, res) => {
   }
 };
 
+const getUserDetail = async (req, res) => {
+  try {
+    const { params } = req;
+    const result = await usersModel.getUserDetail(params);
+
+    if (result.rows.length < 1) {
+      return res.status(404).json({
+        msg: "Data Not Found"
+      });
+    }
+    res.status(200).json({
+      data: result.rows,
+    });
+  } catch (err) {
+    res.status(500).json({
+      msg: "Internal Server Error",
+    });
+  }
+};
+
 const insertUsers = async (req, res) => {
   try {
     const result = await usersModel.insertUsers({
@@ -67,6 +87,7 @@ const deleteUsers = async (req, res) => {
 
 module.exports = {
   getUsers,
+  getUserDetail,
   insertUsers,
   updateUsers,
   deleteUsers,

@@ -13,6 +13,23 @@ const getUsers = () => {
   });
 };
 
+const getUserDetail = (params) => {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT u.email, u.phone_number, p.address, p.display_name, p.firstname, p.lastname, p.birth_day 
+    FROM profile p
+    JOIN users u on u.id = p.user_id
+    WHERE u.id = $1;`;
+    const values = [params.id];
+    db.query(sql, values, (error, result) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(result);
+    });
+  });
+};
+
 const insertUsers = (data) => {
   return new Promise((resolve, reject) => {
     const sql = "INSERT INTO users (email, password, phone_number, role_id) VALUES ($1, $2, $3, 2) RETURNING *";
@@ -57,6 +74,7 @@ const deleteUsers = (params) => {
 
 module.exports = {
   getUsers,
+  getUserDetail,
   insertUsers,
   updateUsers,
   deleteUsers,
