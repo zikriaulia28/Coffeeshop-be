@@ -37,9 +37,7 @@ const createTransaction = async (req, res) => {
     console.log(error);
     await client.query("ROLLBACK");
     client.release();
-    res.status(500).json({
-      msg: "Internal Server Error",
-    });
+    return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
 

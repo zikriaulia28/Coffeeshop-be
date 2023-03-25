@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { error } = require("../utils/response");
 
 const { jwtSecret } = require("../configs/environtment");
 const blacklist = [];
@@ -8,23 +9,23 @@ const checkToken = (req, res, next) => {
   const bearerToken = req.header("Authorization");
   // via authorization header berbentuk bearer token
   // verifikasi token
-  if (!bearerToken) return res.status(403).json({
-    msg: "Silahkan Login Terlebih Dahulu"
-  });
+  if (!bearerToken) {
+    return error(res, { status: 403, message: "Silahkan Login Terlebih Dahulu" });
+  }
   const token = bearerToken.split(" ")[1];
   jwt.verify(token, jwtSecret, (err, payload) => {
     // jika tidak, akan tolak akses
-    if (err && err.name)
-      return res.status(403).json({
-        msg: err.message,
-      });
-    if (err)
-      return res.status(500).json({
-        msg: "Internal Server Error"
-      });
+    if (err && err.name) {
+      return error(res, { status: 403, message: error.message });
+    }
+    if (err) {
+      return error(res, { status: 500, message: error.message });
+    }
+
     if (blacklist.includes(token)) {
-      return res.status(401).json({
-        msg: "Token sudah tidak Valid",
+      return error(res, {
+        status: 401,
+        msg: "Token sudah tidak Valid"
       });
     }
     // jika valid lanjut ke controller
@@ -36,9 +37,9 @@ const checkToken = (req, res, next) => {
 
 const deleteToken = (req, res) => {
   const bearerToken = req.header("Authorization");
-  if (!bearerToken) return res.status(403).json({
-    msg: "Silahkan Login Terlebih Dahulu"
-  });
+  if (!bearerToken) {
+    return error(res, { status: 403, message: "Silahkan Login Terlebih Dahulu" });
+  }
   // via authorization header berbentuk bearer token
   const token = bearerToken.split(" ")[1];
   jwt.verify(token, jwtSecret, (err, payload) => {

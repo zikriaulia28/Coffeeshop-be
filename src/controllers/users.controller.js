@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const usersModel = require("../models/users.model");
 const { uploader } = require("../utils/cloudinary");
+const { error } = require("../utils/response");
 
 
 const getUsers = async (req, res) => {
@@ -11,9 +12,7 @@ const getUsers = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
-      msg: "Internal Server Error",
-    });
+    return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
 
@@ -23,17 +22,13 @@ const getUserDetail = async (req, res) => {
     const result = await usersModel.getUserDetail(params);
 
     if (result.rows.length < 1) {
-      return res.status(404).json({
-        msg: "Data Not Found"
-      });
+      return error(res, { status: 404, msg: "Data Not Found" });
     }
     res.status(200).json({
       data: result.rows,
     });
   } catch (err) {
-    res.status(500).json({
-      msg: "Internal Server Error",
-    });
+    return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
 
@@ -49,9 +44,7 @@ const insertUsers = async (req, res) => {
       msg: "Register successful"
     });
   } catch (err) {
-    res.status(500).json({
-      msg: "Internal server error",
-    });
+    return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
 
@@ -72,9 +65,7 @@ const updateUsers = async (req, res) => {
     });
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({
-      msg: "Internal server error",
-    });
+    return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
 
@@ -88,9 +79,7 @@ const deleteUsers = async (req, res) => {
     });
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({
-      msg: "Internal server error",
-    });
+    return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
 

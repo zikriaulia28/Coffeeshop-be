@@ -91,6 +91,16 @@ const insertProducts = (data, fileLink) => {
   });
 };
 
+const nextIdValue = () => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT LAST_VALUE + 1 AS next_value FROM products_id_seq";
+    db.query(sql, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
 
 const updateProducts = (params, body, fileLink) => {
   return new Promise((resolve, reject) => {
@@ -166,4 +176,5 @@ module.exports = {
   deleteProducts,
   getMetaProducts,
   updateImageProducts,
+  nextIdValue,
 };

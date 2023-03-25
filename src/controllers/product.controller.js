@@ -1,17 +1,14 @@
 const productModel = require("../models/products.model");
 const { uploader } = require("../utils/cloudinary");
+const { error } = require("../utils/response");
 
 
 const getProducts = async (req, res) => {
   try {
     const { query } = req;
     const result = await productModel.getProducts(query);
-    if (result.rows.length === 0) {
-      res.status(404).json({
-        data: result.rows,
-        msg: "Product Tidak Ditemukan",
-      });
-      return;
+    if (result.rows.length < 1) {
+      return error(res, { status: 404, message: "Data Not Found" });
     }
     const meta = await productModel.getMetaProducts(query);
     res.status(200).json({
@@ -20,9 +17,7 @@ const getProducts = async (req, res) => {
     });
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({
-      msg: "Internal Server Error",
-    });
+    return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
 
@@ -31,128 +26,71 @@ const getProductsId = async (req, res) => {
     const { params } = req;
     const result = await productModel.getProductsId(params);
     if (result.rows.length < 1) {
-      res.status(404).json({
-        msg: "Product not found"
-      });
-      return;
+      return error(res, { status: 404, message: "Data Not Found" });
     }
     res.status(200).json({
       data: result.rows,
     });
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({
-      msg: "Internal server error",
-    });
+    return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
 
 const insertProducts = async (req, res) => {
   try {
-    let fileLink;
-    if (req.file) {
-      // Unggah file ke cloud
-      const randomId = Math.random().toString(36).substring(2, 7);
-      const cloudResult = await cloudUpload(req, res, { prefix: "product", id: randomId });
-      fileLink = cloudResult.secure_url;
-    }
-    const { body } = req;
-    if (!body || !fileLink) {
-      return res.status(400).json({ msg: "Input cannot be empty" });
-    }
+    const { body, file } = req;
+    const valueResult = await productModel.nextIdValue();
+    const nextValue = valueResult.rows[0].next_value;
+    const { data, err, message } = await uploader(req, "product", nextValue);
+    if (err) throw { message, err };
+    if (!body || !file) return error(res, { status: 400, message: "Image Is Required" });
+    const fileLink = data.secure_url;
     const result = await productModel.insertProducts(body, fileLink);
     res.status(201).json({
       data: result.rows[0],
-      msg: "Insert success"
+      message: "Insert success"
     });
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({
-      msg: "Terjadi kesalahan pada server",
-    });
+    return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
-
-const cloudUpload = async (req, res, filename) => {
-  try {
-    // upload ke cloud
-    const { prefix, id } = filename;
-    const { data, err, msg } = await uploader(req, prefix, id);
-    if (err) throw { msg, Error };
-    if (!data) return res.status(200).json({ msg: "No File Uploaded" });
-    return data;
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).json({
-      msg: "Internal server error",
-    });
-  }
-};
-
 
 const updateProducts = async (req, res) => {
   try {
-    let fileLink;
-    if (req.file) {
-      // Unggah file ke cloud
-      const cloudResult = await cloudUpload(req, res, { prefix: "product", id: req.params.id });
-      fileLink = cloudResult.secure_url;
-    }
-
-    const { params, body } = req;
-    if (!fileLink && !body.name && !body.price) {
-      // Jika tidak ada perubahan yang diberikan, maka kembalikan response kosong
+    const { params, body, file } = req;
+    const { data, err, msg } = await uploader(req, "product", params.id);
+    if (err) throw { msg, err };
+    if (!file && !body.name && !body.price) {
       return res.status(200).json({
         data: [],
-        msg: "Tidak ada perubahan yang dilakukan",
+        message: "Tidak ada perubahan yang dilakukan",
       });
     }
-    const result = await productModel.updateProducts(params, body, fileLink); // sertakan fileLink pada pemanggilan productModel.updateProducts
+    const fileLink = data.secure_url;
+    const result = await productModel.updateProducts(params, body, fileLink);
     res.status(200).json({
       data: result.rows,
-      msg: "Update Berhasil"
+      message: "Update Berhasil"
     });
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({
-      msg: "Internal server error",
-    });
+    return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
-
-
-
-const patchImageProducts = async (req, res) => {
-  console.log(req.file);
-  const fileLink = `/images/${req.file.filename}`;
-  try {
-    const result = await productModel.updateImageProducts(fileLink, req.params.id);
-    res.status(200).json({
-      data: result.rows,
-      msg: "Success Updating Image",
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      msg: "Internal Server Error",
-    });
-  }
-};
-
 
 const deleteProducts = async (req, res) => {
   try {
     const { params } = req;
     const result = await productModel.deleteProducts(params);
     res.status(200).json({
-      msg: "Delete Success",
+      message: "Delete Success",
       data: result.rows
     });
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({
-      msg: "Internal server error",
-    });
+    return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
 
@@ -161,7 +99,5 @@ module.exports = {
   getProductsId,
   insertProducts,
   updateProducts,
-  patchImageProducts,
   deleteProducts,
-  cloudUpload,
 };
