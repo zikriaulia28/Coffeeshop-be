@@ -8,7 +8,7 @@ const authRouter = Router();
 // login => post request
 authRouter.post("/", authController.login);
 // register => post request
-
+authRouter.post("/new", authController.register);
 // edit pwd => update request 
 authRouter.patch("/", authMiddleware.checkToken, authController.editPassword);
 

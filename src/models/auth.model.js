@@ -15,6 +15,20 @@ const userVerification = (body) => {
   });
 };
 
+const createUsers = (email, pwd, phone) => {
+  return new Promise((resolve, reject) => {
+    const sql = "INSERT INTO users (email, password, phone_number, role_id) VALUES ($1, $2, $3, 2) RETURNING *";
+    const values = [email, pwd, phone];
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(result);
+    });
+  });
+};
+
 const getPassword = (userId) => {
   return new Promise((resolve, reject) => {
     const sql = "SELECT u.password From users u WHERE id = $1";
@@ -54,6 +68,7 @@ const getUserRole = (userId) => {
 
 module.exports = {
   userVerification,
+  createUsers,
   getPassword,
   editPassword,
   getUserRole,

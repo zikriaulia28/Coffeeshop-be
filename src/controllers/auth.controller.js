@@ -46,6 +46,30 @@ const login = async (req, res) => {
   }
 };
 
+const register = async (req, res) => {
+  const { body } = req;
+  try {
+    // cek email duplicates
+    const verificationResult = await authModels.userVerification(body);
+    if (verificationResult.rows.length > 0) {
+      return error(res, { status: 400, message: "Duplicate Email" });
+    }
+    // hash password
+    const hashedPassword = await bcrypt.hash(body.pwd, 10);
+    await authModels.createUsers(
+      body.email,
+      hashedPassword,
+      body.phone_number
+    );
+    return res.status(201).json({
+      message: "User created successfully"
+    });
+  } catch (error) {
+    console.log(error);
+    return error(res, { status: 500, message: "Internal Server Error" });
+  }
+};
+
 const privateAccess = (req, res) => {
   const { id, email, display_name } = req.authInfo;
   res.status(200).json({
@@ -115,6 +139,7 @@ const checkRole = async (req, res, next) => {
 
 module.exports = {
   login,
+  register,
   privateAccess,
   editPassword,
   checkRole,
