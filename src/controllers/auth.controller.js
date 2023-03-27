@@ -15,7 +15,8 @@ const login = async (req, res) => {
     if (result.rows.length < 1) {
       return error(res, { status: 401, message: "Email/Password Salah" });
     }
-    const { id, display_name, password } = result.rows[0];
+    const { id, role_id, password, image } = result.rows[0];
+
     // compare password
     const isPasswordValid = await bcrypt.compare(body.password, password);
     if (!isPasswordValid) {
@@ -23,11 +24,13 @@ const login = async (req, res) => {
     }
     const payload = {
       id,
-      display_name,
+      role_id,
+      image
     };
     const jwtOptions = {
       expiresIn: "5m",
     };
+
     // buat token
     jwt.sign(
       payload,
@@ -38,6 +41,7 @@ const login = async (req, res) => {
         res.status(200).json({
           message: "Selamat Datang",
           token,
+          data: result.rows[0],
         });
       });
   } catch (error) {
@@ -59,7 +63,7 @@ const register = async (req, res) => {
     await authModels.createUsers(
       body.email,
       hashedPassword,
-      body.phone_number
+      body.phoneNumber
     );
     return res.status(201).json({
       message: "User created successfully"
