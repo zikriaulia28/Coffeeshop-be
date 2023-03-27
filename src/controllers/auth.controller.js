@@ -25,7 +25,6 @@ const login = async (req, res) => {
     const payload = {
       id,
       role_id,
-      image
     };
     const jwtOptions = {
       expiresIn: "5m",
@@ -41,7 +40,7 @@ const login = async (req, res) => {
         res.status(200).json({
           message: "Selamat Datang",
           token,
-          data: result.rows[0],
+          image
         });
       });
   } catch (error) {
