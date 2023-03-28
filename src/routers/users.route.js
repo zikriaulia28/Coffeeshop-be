@@ -8,7 +8,7 @@ const memoryUpload = require("../middlewares/memoryUpload");
 usersRouter.post("/", usersController.insertUsers);
 // Read
 usersRouter.get("/", usersController.getUsers);
-usersRouter.get("/:id", checkRole, usersController.getUserDetail);
+usersRouter.get("/:id", usersController.getUserDetail);
 // Update
 usersRouter.patch("/:id", memoryUpload.single("image"), usersController.updateUsers);
 // Delete
