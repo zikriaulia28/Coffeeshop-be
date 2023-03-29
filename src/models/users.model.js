@@ -32,7 +32,7 @@ const getUserDetail = (params) => {
 
 const insertUsers = (data) => {
   return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO users (email, password, phone_number, role_id) VALUES ($1, $2, $3, 2) RETURNING *";
+    const sql = "INSERT INTO users (email, password, phone_number, role_id) VALUES ($1, $2, $3, 2) RETURNING*";
     const values = [data.email, data.password, data.phone_number];
     db.query(sql, values, (err, result) => {
       if (err) {

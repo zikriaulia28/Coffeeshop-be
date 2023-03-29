@@ -51,20 +51,25 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { body } = req;
   try {
+    const { body } = req;
+    console.log(body.email);
+    if (!body.email) {
+      return error(res, { status: 400, message: "Email is required" });
+    }
     // cek email duplicates
-    const verificationResult = await authModels.userVerification(body);
+    const verificationResult = await authModels.userVerification(body.email);
     if (verificationResult.rows.length > 0) {
       return error(res, { status: 400, message: "Duplicate Email" });
     }
     // hash password
-    const hashedPassword = await bcrypt.hash(body.pwd, 10);
+    const hashedPassword = await bcrypt.hash(body.password, 10);
     await authModels.createUsers(
       body.email,
       hashedPassword,
-      body.phoneNumber
+      body.phone_number,
     );
+
     return res.status(201).json({
       message: "User created successfully"
     });

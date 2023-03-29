@@ -2,12 +2,7 @@ const db = require("../configs/postgre");
 
 const userVerification = (body) => {
   return new Promise((resolve, reject) => {
-    // const sql = "SELECT u.id, pr.display_name, u.password from users u JOIN profile pr ON pr.user_id = u.id WHERE email = $1";
     const sql = "SELECT u.id, u.email, u.password, u.role_id, p.image FROM users u JOIN profile p on p.user_id = u.id  WHERE email=$1";
-    // const sql = `SELECT u.role_id, p.display_name, p.image 
-    // FROM profile p
-    // JOIN users u on u.id = p.user_id
-    // WHERE u.id = $1`;
     const values = [body.email];
     db.query(sql, values, (err, result) => {
       if (err) {
@@ -19,10 +14,10 @@ const userVerification = (body) => {
   });
 };
 
-const createUsers = (email, pwd, phone) => {
+const createUsers = (email, password, phone_number, role_id) => {
   return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO users (email, password, phone_number, role_id) VALUES ($1, $2, $3, 2) RETURNING *";
-    const values = [email, pwd, phone];
+    const sql = "INSERT INTO users (email, password, phone_number, role_id) VALUES ($1, $2, $3, $4) RETURNING*";
+    const values = [email, password, phone_number, role_id || 2];
     db.query(sql, values, (err, result) => {
       if (err) {
         reject(err);
