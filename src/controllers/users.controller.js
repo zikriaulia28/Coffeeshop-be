@@ -50,15 +50,17 @@ const insertUsers = async (req, res) => {
 
 const updateUsers = async (req, res) => {
   try {
-    const { params, body, file } = req;
+    const { params, body, } = req;
     const { data, err, msg } = await uploader(req, "users", params.id);
     if (err) throw { msg, err };
 
-    if (!file) return res.status(400).json({
-      msg: "Image Is Required"
-    });
-    const fileLink = data.secure_url;
+    let fileLink = null;
+    if (data) {
+      fileLink = data.secure_url;
+    }
+
     const result = await usersModel.updateUsers(params, body, fileLink);
+
     res.status(200).json({
       data: result.rows,
       msg: "Update Success"
@@ -68,6 +70,7 @@ const updateUsers = async (req, res) => {
     return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
+
 
 const deleteUsers = async (req, res) => {
   try {

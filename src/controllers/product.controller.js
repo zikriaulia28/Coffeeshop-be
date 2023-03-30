@@ -59,10 +59,10 @@ const insertProducts = async (req, res) => {
 
 const updateProducts = async (req, res) => {
   try {
-    const { params, body, file } = req;
+    const { params, body, } = req;
     const { data, err, msg } = await uploader(req, "product", params.id);
     if (err) throw { msg, err };
-    if (!file && !body.name && !body.price) {
+    if (!body.name && !body.price) {
       return res.status(200).json({
         data: [],
         message: "Tidak ada perubahan yang dilakukan",

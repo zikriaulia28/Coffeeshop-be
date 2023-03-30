@@ -2,17 +2,45 @@ const db = require("../configs/postgre");
 
 const getProducts = (q) => {
   return new Promise((resolve, reject) => {
-    let sql = "SELECT p.id, p.name, p.price, p.image, c.category_name FROM products p JOIN categories c ON p.category_id = c.id ORDER BY ";
-    let order = "id ASC";
+    let sql = "SELECT p.id, p.name, p.price, p.image, c.category_name FROM products p JOIN categories c ON p.category_id = c.id  ";
+    let search = "";
+    if (q.search) {
+      search = `WHERE lower(p.name) LIKE lower('%${q.search}%')`;
+    }
+    sql += search;
+    let categories = "";
+    const inputCategory = parseInt(q.category);
+    if (inputCategory === 1) {
+      categories = `AND p.category_id = ${inputCategory}`;
+    }
+    if (inputCategory === 2) {
+      categories = `AND p.category_id = ${inputCategory}`;
+    }
+    if (inputCategory === 3) {
+      categories = `AND p.category_id = ${inputCategory}`;
+    }
+    if (inputCategory === 4) {
+      categories = `AND p.category_id = ${inputCategory}`;
+    }
+    sql += categories;
+
+    let order = "";
     if (q.order === "cheapest") {
-      order = "price ASC";
+      order = "ORDER BY price ASC";
     }
     if (q.order === "priciest") {
-      order = "price DESC";
+      order = "ORDER BY price DESC";
+    }
+    if (q.order === "latest") {
+      order = "ORDER BY p.id DESC";
+    }
+    if (q.order === "oldest") {
+      order = "ORDER BY p.id ASC";
     }
     sql += order;
 
-    const limit = parseInt(q.limit) || 15;
+
+    const limit = parseInt(q.limit) || 5;
     const page = parseInt(q.page) || 1;
     const offset = (page - 1) * limit;
 
@@ -31,7 +59,13 @@ const getProducts = (q) => {
 
 const getMetaProducts = (q) => {
   return new Promise((resolve, reject) => {
-    let sql = "SELECT COUNT(*) as total_data FROM products";
+    let sql = "SELECT COUNT(*) as total_data FROM products WHERE id <> 0";
+    if (q.search) {
+      sql += ` AND LOWER(name) LIKE LOWER('%${q.search}%')`;
+    }
+    if (q.category) {
+      sql += ` AND category_id = ${q.category}`;
+    }
     db.query(sql, (err, result) => {
       if (err) {
         reject(err);
@@ -43,15 +77,25 @@ const getMetaProducts = (q) => {
       const totalPage = Math.ceil(totalData / limit);
       let next = "";
       let prev = "";
-      // Jika halaman saat ini lebih besar dari 1, maka halaman sebelumnya tersedia
+
+      // generate prev link
       if (page > 1) {
-        // Membuat URL yang mengarah ke halaman sebelumnya
-        prev = `/products?page=${page - 1}&limit=${limit}`;
+        const prevQueryParams = new URLSearchParams({
+          ...q,
+          page: page - 1,
+          limit: limit,
+        });
+        prev = `/products?${prevQueryParams.toString()}`;
       }
-      // Jika halaman saat ini kurang dari total halaman yang tersedia, maka halaman selanjutnya tersedia
+
+      // generate next link
       if (page < totalPage) {
-        // Membuat URL yang mengarah ke halaman selanjutnya
-        next = `/products?page=${page + 1}&limit=${limit}`;
+        const nextQueryParams = new URLSearchParams({
+          ...q,
+          page: page + 1,
+          limit: limit,
+        });
+        next = `/products?${nextQueryParams.toString()}`;
       }
 
       const meta = {
@@ -64,6 +108,7 @@ const getMetaProducts = (q) => {
     });
   });
 };
+
 
 
 const getProductsId = (params) => {
