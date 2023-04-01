@@ -29,7 +29,6 @@ const login = async (req, res) => {
     const jwtOptions = {
       expiresIn: "5m",
     };
-
     // buat token
     jwt.sign(
       payload,

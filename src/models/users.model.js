@@ -75,6 +75,11 @@ const updateUsers = (params, body, fileLink) => {
       values.push(body.birth_day);
     }
 
+    if (body.gender) {
+      conditions.push(`gender = $${index++}`);
+      values.push(body.gender);
+    }
+
     if (fileLink) {
       conditions.push(`image = $${index++}`);
       values.push(fileLink);
