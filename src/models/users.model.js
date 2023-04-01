@@ -15,7 +15,7 @@ const getUsers = () => {
 
 const getUserDetail = (params) => {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT u.email, u.phone_number, p.address, p.display_name, p.firstname, p.lastname, p.birth_day, p.image
+    const sql = `SELECT u.email, u.phone_number, p.address, p.display_name, p.firstname, p.lastname, p.birth_day, p.image, p.gender
     FROM profile p
     JOIN users u on u.id = p.user_id
     WHERE u.id = $1;`;
