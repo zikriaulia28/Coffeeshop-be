@@ -2,7 +2,7 @@ const db = require("../configs/postgre");
 
 const getProducts = (q) => {
   return new Promise((resolve, reject) => {
-    let sql = "SELECT p.id, p.name, p.price, p.image, c.category_name FROM products p JOIN categories c ON p.category_id = c.id  ";
+    let sql = "SELECT p.id, p.name, p.price, p.image, c.category_name as category FROM products p JOIN categories c ON p.category_id = c.id  ";
     let search = "";
     if (q.search) {
       search = `WHERE lower(p.name) LIKE lower('%${q.search}%')`;
