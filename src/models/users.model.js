@@ -44,7 +44,7 @@ const insertUsers = (data) => {
   });
 };
 
-const updateUsers = (params, body, fileLink) => {
+const updateProfile = (params, body, fileLink) => {
   return new Promise((resolve, reject) => {
     const conditions = [];
     const values = [];
@@ -101,6 +101,25 @@ const updateUsers = (params, body, fileLink) => {
   });
 };
 
+const updateUser = (params, email, phone_number) => {
+  return new Promise((resolve, reject) => {
+    const sql = `UPDATE users SET
+    email = $1,
+    phone_number = $2
+    where id = $3 RETURNING*`;
+    const values = [email, phone_number, params.id];
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(result);
+    });
+  });
+};
+
+
+
 const deleteUsers = (params) => {
   return new Promise((resolve, reject) => {
     const sql = "DELETE FROM users WHERE id = $1 RETURNING *";
@@ -119,6 +138,7 @@ module.exports = {
   getUsers,
   getUserDetail,
   insertUsers,
-  updateUsers,
+  updateProfile,
+  updateUser,
   deleteUsers,
 };

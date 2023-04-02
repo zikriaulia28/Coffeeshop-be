@@ -48,7 +48,7 @@ const insertUsers = async (req, res) => {
   }
 };
 
-const updateUsers = async (req, res) => {
+const updateProfile = async (req, res) => {
   try {
     const { params, body, } = req;
     const { data, err, msg } = await uploader(req, "users", params.id);
@@ -59,17 +59,41 @@ const updateUsers = async (req, res) => {
       fileLink = data.secure_url;
     }
 
-    const result = await usersModel.updateUsers(params, body, fileLink);
+    const result = await usersModel.updateProfile(params, body, fileLink);
 
     res.status(200).json({
       data: result.rows,
-      msg: "Update Success"
+      msg: "Updated Profile successfully"
     });
   } catch (err) {
     console.log(err.message);
     return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
+
+const updateUsers = async (req, res) => {
+  try {
+    const { params } = req;
+    const { email, phone_number } = req.body;
+
+    // Check if email value is null or not
+    if (!email) {
+      return res.status(400).json({
+        message: "Email cannot be null"
+      });
+    }
+
+    const result = await usersModel.updateUser(params, email, phone_number);
+    res.status(200).json({
+      data: result.rows,
+      msg: "Updated user successfully"
+    });
+  } catch (err) {
+    console.log(err.message);
+    return error(res, { status: 500, message: "Internal Server Error" });
+  }
+};
+
 
 
 const deleteUsers = async (req, res) => {
@@ -91,6 +115,7 @@ module.exports = {
   getUsers,
   getUserDetail,
   insertUsers,
+  updateProfile,
   updateUsers,
   deleteUsers,
 };

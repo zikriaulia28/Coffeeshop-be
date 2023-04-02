@@ -11,7 +11,8 @@ usersRouter.post("/", usersController.insertUsers);
 usersRouter.get("/", usersController.getUsers);
 usersRouter.get("/:id", usersController.getUserDetail);
 // Update
-usersRouter.patch("/:id", memoryUpload.single("image"), usersController.updateUsers);
+usersRouter.patch("/profile/:id", memoryUpload.single("image"), usersController.updateProfile);
+usersRouter.patch("/:id", usersController.updateUsers);
 // Delete
 usersRouter.delete("/:id", checkRole, usersController.deleteUsers);
 
