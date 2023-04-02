@@ -73,17 +73,8 @@ const updateProfile = async (req, res) => {
 
 const updateUsers = async (req, res) => {
   try {
-    const { params } = req;
-    const { email, phone_number } = req.body;
-
-    // Check if email value is null or not
-    if (!email) {
-      return res.status(400).json({
-        message: "Email cannot be null"
-      });
-    }
-
-    const result = await usersModel.updateUser(params, email, phone_number);
+    const { params, body } = req;
+    const result = await usersModel.updateUser(params, body);
     res.status(200).json({
       data: result.rows,
       msg: "Updated user successfully"

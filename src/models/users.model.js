@@ -101,13 +101,42 @@ const updateProfile = (params, body, fileLink) => {
   });
 };
 
-const updateUser = (params, email, phone_number) => {
+// const updateUser = (params, email, phone_number) => {
+//   return new Promise((resolve, reject) => {
+//     const sql = `UPDATE users SET
+//     email = $1,
+//     phone_number = $2
+//     where id = $3 RETURNING*`;
+//     const values = [email, phone_number, params.id];
+//     db.query(sql, values, (err, result) => {
+//       if (err) {
+//         reject(err);
+//         return;
+//       }
+//       resolve(result);
+//     });
+//   });
+// };
+const updateUser = (params, body) => {
   return new Promise((resolve, reject) => {
-    const sql = `UPDATE users SET
-    email = $1,
-    phone_number = $2
-    where id = $3 RETURNING*`;
-    const values = [email, phone_number, params.id];
+    const conditions = [];
+    const values = [];
+    let index = 1;
+
+    if (body.email) {
+      conditions.push(`email = $${index++}`);
+      values.push(body.email);
+    }
+
+    if (body.phone_number) {
+      conditions.push(`phone_number = $${index++}`);
+      values.push(body.phone_number);
+    }
+    if (conditions.length === 0) {
+      return null; // tidak ada kondisi yang diberikan
+    }
+    const sql = `UPDATE users SET ${conditions.join(", ")}  WHERE id = $${index} RETURNING *`;
+    values.push(params.id);
     db.query(sql, values, (err, result) => {
       if (err) {
         reject(err);
