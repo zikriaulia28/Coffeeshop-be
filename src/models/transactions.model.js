@@ -59,7 +59,7 @@ const getHistories = (info) => {
     JOIN transactions t  ON t.id = tps.transaction_id 
     JOIN products p ON p.id = tps.product_id
     JOIN deliveries d ON d.id = t.delivery_id
-    WHERE t.user_id = $1`;
+    WHERE t.user_id = $1 RETURNING*`;
     db.query(sqlQuery, [info.id], (error, result) => {
       if (error) return reject(error);
       resolve(result);
