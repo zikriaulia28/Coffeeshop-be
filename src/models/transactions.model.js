@@ -1,3 +1,4 @@
+const db = require("../configs/postgre");
 const createTransaction = (client, body, userId) => {
   return new Promise((resolve, reject) => {
     const { notes, status_id, promo_id, payment_id, delivery_id } = body;
@@ -14,7 +15,7 @@ const createTransaction = (client, body, userId) => {
 const createDetailTransaction = (client, body, transactionId) => {
   return new Promise((resolve, reject) => {
     const { products } = body;
-    let sql = "INSERT INTO transactions_products_sizes (transaction_id, product_id, size_id, qty, subtotal) VALUES ";
+    let sql = "INSERT INTO transactions_products_sizes (transaction_id, product_id, size_id, qty, subtotal) VALUES RETTURNING*";
     let values = [];
     products.forEach((product, i) => {
       const { product_id, size_id, qty, subtotal } = product;
@@ -42,10 +43,25 @@ const getTransaction = (client, transactionId) => {
   join profile pf on pf.user_id= t.user_id 
   join payment py on py.id = t.payment_id 
   join promos pr on pr.id = t.promo_id
-  join status st on st.id = t.status_id WHERE t.id = $1`;
+  join status st on st.id = t.status_id WHERE t.id = $1 RETURNING*`;
     client.query(sql, [transactionId], (err, result) => {
       if (err)
         return reject(err);
+      resolve(result);
+    });
+  });
+};
+
+const getHistories = (info) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = `SELECT tps.transaction_id , p.image, p.name, p.price, tps.size_id, 
+    tps.qty, d.method  FROM transactions_products_sizes tps 
+    JOIN transactions t  ON t.id = tps.transaction_id 
+    JOIN products p ON p.id = tps.product_id
+    JOIN deliveries d ON d.id = t.delivery_id
+    WHERE t.user_id = $1`;
+    db.query(sqlQuery, [info.id], (error, result) => {
+      if (error) return reject(error);
       resolve(result);
     });
   });
@@ -55,4 +71,6 @@ module.exports = {
   createTransaction,
   createDetailTransaction,
   getTransaction,
+  // getHistory,
+  getHistories
 };

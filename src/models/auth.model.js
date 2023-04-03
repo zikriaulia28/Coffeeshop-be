@@ -75,6 +75,50 @@ const getUserRole = (userId) => {
   });
 };
 
+const createOTP = (otp, email) => {
+  return new Promise((resolve, reject) => {
+    const sql = "UPDATE users SET otp = $1 WHERE email = $2 RETURNING otp";
+    const values = [otp, email];
+    db.query(sql, values, (err, result) => {
+      if (err) return reject(err);
+      resolve(result);
+    });
+  });
+};
+
+const getOTP = (email) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT otp FROM users WHERE email = $1";
+    const values = [email];
+    db.query(sql, values, (err, result) => {
+      if (err) return reject(err);
+      resolve(result);
+    });
+  });
+};
+
+const deleteOTP = (email) => {
+  return new Promise((resolve, reject) => {
+    const sql = "UPDATE users SET otp = NULL WHERE email = $1";
+    const values = [email];
+    db.query(sql, values, (err, result) => {
+      if (err) return reject(err);
+      resolve(result);
+    });
+  });
+};
+
+const forgotPwd = (email, password) => {
+  return new Promise((resolve, reject) => {
+    const sql = "UPDATE users SET password = $1 WHERE email = $2";
+    const values = [password, email];
+    db.query(sql, values, (err, result) => {
+      if (err) return reject(err);
+      resolve(result);
+    });
+  });
+};
+
 
 module.exports = {
   userVerification,
@@ -83,4 +127,8 @@ module.exports = {
   getPassword,
   editPassword,
   getUserRole,
+  createOTP,
+  getOTP,
+  deleteOTP,
+  forgotPwd
 };

@@ -147,10 +147,62 @@ const checkRole = async (req, res, next) => {
   }
 };
 
+const createOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+    console.log(email);
+    const generateOTP = () => {
+      const digits = "0123456789";
+      let OTP = "";
+      for (let i = 0; i < 6; i++) {
+        OTP += digits[Math.floor(Math.random() * 10)];
+      }
+      return OTP;
+    };
+
+    const otp = generateOTP();
+    const result = await authModels.createOTP(otp, email);
+
+    if (result.rows < 1) {
+      return error(res, { status: 404, message: "No Such Email" });
+    }
+    res.status(200).json({
+      data: otp,
+      message: "Succesfully sent"
+    });
+  } catch (err) {
+    console.log(err);
+    return error(res, { status: 500, message: "Internal Server Error" });
+  }
+};
+
+const forgotPwd = async (req, res) => {
+  try {
+    const { email, otp, password } = req.body;
+    const otpFromDb = await authModels.getOTP(email);
+
+    if (otpFromDb.rows[0].otp !== otp) {
+      return error(res, { status: 403, message: "Invalid OTP" });
+    }
+
+    const hashedPwd = await bcrypt.hash(password, 10);
+    await authModels.forgotPwd(email, hashedPwd);
+    await authModels.deleteOTP(email);
+    res.status(200).json({
+      message: "Successfully Changed Password",
+    });
+  } catch (err) {
+    console.log(err);
+    return error(res, { status: 500, message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   login,
   register,
   privateAccess,
   editPassword,
   checkRole,
+  createOTP,
+  forgotPwd
 };

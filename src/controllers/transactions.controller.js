@@ -41,4 +41,20 @@ const createTransaction = async (req, res) => {
   }
 };
 
-module.exports = { createTransaction };
+const getHistory = async (req, res) => {
+  try {
+    const { authInfo } = req;
+    const result = await transactionsModel.getHistories(authInfo);
+    res.status(200).json({
+      data: result.rows,
+    });
+  } catch (error) {
+    console.log(error);
+    return error(res, { status: 500, message: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  createTransaction,
+  getHistory
+};

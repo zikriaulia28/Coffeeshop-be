@@ -12,6 +12,9 @@ authRouter.post("/new", authController.register);
 // edit pwd => update request 
 authRouter.patch("/", authMiddleware.checkToken, authController.editPassword);
 
+authRouter.patch("/otp", authController.createOTP);
+authRouter.patch("/forgot", authController.forgotPwd);
+
 // private 
 authRouter.get("/private", authMiddleware.checkToken, authController.privateAccess);
 
