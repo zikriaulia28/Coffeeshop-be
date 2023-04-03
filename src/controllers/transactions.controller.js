@@ -45,6 +45,7 @@ const getHistory = async (req, res) => {
   try {
     const { authInfo } = req;
     const result = await transactionsModel.getHistories(authInfo);
+    console.log(authInfo);
     res.status(200).json({
       data: result.rows,
     });
