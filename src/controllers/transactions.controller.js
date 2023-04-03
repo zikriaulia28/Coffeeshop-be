@@ -6,9 +6,6 @@ const transactionsModel = require("../models/transactions.model");
 // 2. insert detail
 const createTransaction = async (req, res) => {
   const { authInfo, body } = req;
-  //   res.status(200).json({
-  //     ...body,
-  //   });
   const client = await db.connect();
   try {
     await client.query("BEGIN");
@@ -24,20 +21,22 @@ const createTransaction = async (req, res) => {
       transactionId
     );
     await client.query("COMMIT");
-    const transactionWithDetail = await transactionsModel.getTransaction(
+    const historyWithDetails = await transactionsModel.getTransaction(
       client,
       transactionId
     );
     client.release();
-    res.status(200).json({
-      data: transactionWithDetail.rows,
-      msg: "OK",
+    res.status(201).json({
+      msg: "Add Transactions Success...",
+      data: historyWithDetails.rows,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     await client.query("ROLLBACK");
     client.release();
-    return error(res, { status: 500, message: "Internal Server Error" });
+    res.status(500).json({
+      msg: "Internal Server Error...",
+    });
   }
 };
 
@@ -45,7 +44,6 @@ const getHistory = async (req, res) => {
   try {
     const { authInfo } = req;
     const result = await transactionsModel.getHistories(authInfo);
-    console.log(authInfo);
     res.status(200).json({
       data: result.rows,
     });

@@ -67,6 +67,7 @@ const getHistories = (info) => {
   });
 };
 
+
 module.exports = {
   createTransaction,
   createDetailTransaction,
