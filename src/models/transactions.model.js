@@ -52,7 +52,7 @@ const getTransaction = (client, transactionId) => {
   });
 };
 
-const getHistories = (info) => {
+const getHistories = (id) => {
   return new Promise((resolve, reject) => {
     const sqlQuery = `SELECT DISTINCT ON (tps.transaction_id) tps.transaction_id , d.method, p.image, t.created_at, p.name, p.price, tps.product_id  
     FROM transactions_products_sizes tps 
@@ -60,7 +60,7 @@ const getHistories = (info) => {
     JOIN products p ON p.id = tps.product_id
     JOIN deliveries d ON d.id = t.delivery_id
     WHERE t.user_id = $1`;
-    db.query(sqlQuery, [info.id], (error, result) => {
+    db.query(sqlQuery, [id], (error, result) => {
       if (error) return reject(error);
       resolve(result);
     });
