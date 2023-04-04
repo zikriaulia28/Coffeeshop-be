@@ -42,9 +42,9 @@ const createTransaction = async (req, res) => {
 
 const getHistory = async (req, res) => {
   try {
-    const { body } = req;
-    const result = await transactionsModel.getHistories(body.id);
-    console.log(result);
+    const { authInfo } = req;
+    const result = await transactionsModel.getHistories(authInfo);
+    console.log(result.rows);
     res.status(200).json({
       data: result.rows,
     });
