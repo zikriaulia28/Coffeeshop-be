@@ -15,7 +15,7 @@ const getProducts = async (req, res) => {
       data: result.rows,
       meta,
     });
-    console.log(meta);
+    // console.log(meta);
   } catch (err) {
     console.log(err.message);
     return error(res, { status: 500, message: "Internal Server Error" });

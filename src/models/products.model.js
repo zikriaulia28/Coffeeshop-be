@@ -4,6 +4,8 @@ const getProducts = (q) => {
   return new Promise((resolve, reject) => {
     let sql = "SELECT p.id, p.name, p.price, p.image, c.category_name FROM products p JOIN categories c ON p.category_id = c.id  ";
     let search = "";
+
+    // console.log(q);
     if (q.search) {
       search = `WHERE lower(p.name) LIKE lower('%${q.search}%')`;
     }
@@ -25,17 +27,17 @@ const getProducts = (q) => {
     sql += categories;
 
     let order = "";
-    if (q.order === "cheapest") {
-      order = "ORDER BY price ASC";
+    if (q.order == "cheapest") {
+      order = " ORDER BY price ASC";
     }
-    if (q.order === "priciest") {
-      order = "ORDER BY price DESC";
+    if (q.order == "priciest") {
+      order = " ORDER BY price DESC";
     }
-    if (q.order === "latest") {
-      order = "ORDER BY p.id DESC";
+    if (q.order == "latest") {
+      order = " ORDER BY p.id DESC";
     }
-    if (q.order === "oldest") {
-      order = "ORDER BY p.id ASC";
+    if (q.order == "oldest") {
+      order = " ORDER BY p.id ASC";
     }
     sql += order;
 
@@ -46,7 +48,7 @@ const getProducts = (q) => {
 
     sql += " LIMIT $1 OFFSET $2";
     const values = [limit, offset];
-
+    console.log(sql);
     db.query(sql, values, (err, result) => {
       if (err) {
         reject(err);
