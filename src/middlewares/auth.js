@@ -9,7 +9,7 @@ const checkToken = (req, res, next) => {
   const bearerToken = req.header("Authorization");
   // via authorization header berbentuk bearer token
   // verifikasi token
-  console.log(bearerToken);
+  // console.log(bearerToken);
   if (!bearerToken) {
     return error(res, { status: 403, message: "Silahkan Login Terlebih Dahulu" });
   }

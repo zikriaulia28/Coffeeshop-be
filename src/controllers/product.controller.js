@@ -69,7 +69,11 @@ const updateProducts = async (req, res) => {
         message: "Tidak ada perubahan yang dilakukan",
       });
     }
-    const fileLink = data.secure_url;
+    let fileLink = null;
+    if (data) {
+      fileLink = data.secure_url;
+    }
+    console.log(fileLink);
     const result = await productModel.updateProducts(params, body, fileLink);
     res.status(200).json({
       data: result.rows,
