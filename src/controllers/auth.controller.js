@@ -25,9 +25,10 @@ const login = async (req, res) => {
     const payload = {
       id,
       role_id,
+      image
     };
     const jwtOptions = {
-      expiresIn: "5m",
+      expiresIn: "1d",
     };
     // buat token
     jwt.sign(
@@ -39,8 +40,9 @@ const login = async (req, res) => {
         res.status(200).json({
           message: "Selamat Datang",
           token,
+          id,
+          role_id,
           image,
-          id
         });
       });
   } catch (error) {

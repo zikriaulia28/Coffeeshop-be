@@ -73,7 +73,7 @@ const updateProducts = async (req, res) => {
     if (data) {
       fileLink = data.secure_url;
     }
-    console.log(fileLink);
+    // console.log(fileLink);
     const result = await productModel.updateProducts(params, body, fileLink);
     res.status(200).json({
       data: result.rows,
