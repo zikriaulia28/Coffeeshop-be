@@ -40,9 +40,9 @@ const login = async (req, res) => {
         res.status(200).json({
           message: "Selamat Datang",
           token,
-          id,
-          role_id,
           image,
+          id,
+          role_id
         });
       });
   } catch (error) {
