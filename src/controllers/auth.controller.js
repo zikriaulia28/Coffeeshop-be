@@ -152,7 +152,7 @@ const checkRole = async (req, res, next) => {
 const createOTP = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log(email);
+    // console.log(email);
     const generateOTP = () => {
       const digits = "0123456789";
       let OTP = "";
@@ -164,7 +164,7 @@ const createOTP = async (req, res) => {
 
     const otp = generateOTP();
     const result = await authModels.createOTP(otp, email);
-
+    console.log(result.rows[0].otp);
     if (result.rows < 1) {
       return error(res, { status: 404, message: "No Such Email" });
     }
@@ -182,11 +182,9 @@ const forgotPwd = async (req, res) => {
   try {
     const { email, otp, password } = req.body;
     const otpFromDb = await authModels.getOTP(email);
-
     if (otpFromDb.rows[0].otp !== otp) {
       return error(res, { status: 403, message: "Invalid OTP" });
     }
-
     const hashedPwd = await bcrypt.hash(password, 10);
     await authModels.forgotPwd(email, hashedPwd);
     await authModels.deleteOTP(email);
