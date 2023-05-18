@@ -164,7 +164,7 @@ const createOTP = async (req, res) => {
 
     const otp = generateOTP();
     const result = await authModels.createOTP(otp, email);
-    console.log(result.rows[0].otp);
+    // console.log(result.rows[0].otp);
     if (result.rows < 1) {
       return error(res, { status: 404, message: "No Such Email" });
     }

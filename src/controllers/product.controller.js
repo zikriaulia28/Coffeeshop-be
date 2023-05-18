@@ -63,12 +63,6 @@ const updateProducts = async (req, res) => {
     const { params, body, } = req;
     const { data, err, msg } = await uploader(req, "product", params.id);
     if (err) throw { msg, err };
-    if (!body.name && !body.price) {
-      return res.status(200).json({
-        data: [],
-        message: "Tidak ada perubahan yang dilakukan",
-      });
-    }
     let fileLink = null;
     if (data) {
       fileLink = data.secure_url;

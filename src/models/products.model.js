@@ -129,8 +129,8 @@ const getProductsId = (params) => {
 
 const insertProducts = (data, fileLink) => {
   return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO products (name, price, image, category_id) VALUES ($1, $2, $3, $4) RETURNING *";
-    const values = [data.name, data.price, fileLink, data.category_id];
+    const sql = "INSERT INTO products (name, price, image, category_id, delivery_info, description) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
+    const values = [data.name, data.price, fileLink, data.category_id, data.delivery_info, data.description];
     db.query(sql, values, (err, result) => {
       if (err) return reject(err);
       resolve(result);
@@ -163,6 +163,16 @@ const updateProducts = (params, body, fileLink) => {
     if (body.price) {
       conditions.push(`price = $${index++}`);
       values.push(body.price);
+    }
+
+    if (body.delivery_info) {
+      conditions.push(`delivery_info = $${index++}`);
+      values.push(body.delivery_info);
+    }
+
+    if (body.description) {
+      conditions.push(`description = $${index++}`);
+      values.push(body.description);
     }
 
     if (fileLink) {
