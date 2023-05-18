@@ -54,7 +54,7 @@ const getTransaction = (client, transactionId) => {
 
 const getHistories = (info) => {
   return new Promise((resolve, reject) => {
-    const sqlQuery = `SELECT tps.transaction_id , d.method, p.image, tps.status_id t.created_at, p.name, p.price, tps.product_id, tps.size_id  
+    const sqlQuery = `SELECT tps.transaction_id , d.method, p.image, tps.status_id, t.created_at, p.name, p.price, tps.product_id, tps.size_id  
     FROM transactions_products_sizes tps 
     JOIN transactions t  ON t.id = tps.transaction_id 
     JOIN products p ON p.id = tps.product_id
