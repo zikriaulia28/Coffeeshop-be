@@ -29,11 +29,11 @@ const createUsers = (email, password, phone_number, role_id) => {
   });
 };
 
-const insertDetailUsers = (userId) => {
+const insertDetailUsers = (client, userId) => {
   return new Promise((resolve, reject) => {
     const sql = "INSERT INTO profile (user_id) VALUES ($1)";
     const values = [userId];
-    db.query(sql, values, (error) => {
+    client.query(sql, values, (error) => {
       if (error) return reject(error);
       resolve();
     });

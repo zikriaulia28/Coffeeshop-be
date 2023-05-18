@@ -65,11 +65,11 @@ const register = async (req, res) => {
     await client.query("BEGIN");
     const result = await usersModel.insertUsers(client, body);
     const userId = result.rows[0].id;
-    await usersModel.insertDetailUsers(client, userId);
+    await authModels.insertDetailUsers(client, userId);
     await client.query("COMMIT");
     client.release();
     res.status(200).json({
-      message: "OK",
+      message: "Registration successful",
     });
   } catch (err) {
     console.log(err.message);

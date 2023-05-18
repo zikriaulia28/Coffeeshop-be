@@ -1,4 +1,5 @@
 const db = require("../configs/postgre");
+const bcrypt = require("bcrypt");
 
 const getUsers = () => {
   return new Promise((resolve, reject) => {
@@ -30,17 +31,36 @@ const getUserDetail = (params) => {
   });
 };
 
-const insertUsers = (data) => {
+// const insertUsers = (data) => {
+//   return new Promise((resolve, reject) => {
+//     const sql = "INSERT INTO users (email, password, phone_number, role_id) VALUES ($1, $2, $3, 2) RETURNING*";
+//     const values = [data.email, data.password, data.phone_number];
+//     db.query(sql, values, (err, result) => {
+//       if (err) {
+//         reject(err);
+//         return;
+//       }
+//       resolve(result);
+//     });
+//   });
+// };
+
+const insertUsers = (client, data) => {
   return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO users (email, password, phone_number, role_id) VALUES ($1, $2, $3, 2) RETURNING*";
-    const values = [data.email, data.password, data.phone_number];
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve(result);
-    });
+    bcrypt
+      .hash(data.password, 10)
+      .then((hash) => {
+        let hashedPassword = "";
+        hashedPassword = hash;
+        const sql =
+          "INSERT INTO users (email, password, phone_number, role_id) VALUES ($1, $2, $3, $4) RETURNING id";
+        const values = [data.email, hashedPassword, data.phone_number, data.role_id || 2];
+        client.query(sql, values, (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        });
+      })
+      .catch((error) => reject(error));
   });
 };
 
@@ -101,22 +121,7 @@ const updateProfile = (params, body, fileLink) => {
   });
 };
 
-// const updateUser = (params, email, phone_number) => {
-//   return new Promise((resolve, reject) => {
-//     const sql = `UPDATE users SET
-//     email = $1,
-//     phone_number = $2
-//     where id = $3 RETURNING*`;
-//     const values = [email, phone_number, params.id];
-//     db.query(sql, values, (err, result) => {
-//       if (err) {
-//         reject(err);
-//         return;
-//       }
-//       resolve(result);
-//     });
-//   });
-// };
+
 const updateUser = (params, body) => {
   return new Promise((resolve, reject) => {
     const conditions = [];
