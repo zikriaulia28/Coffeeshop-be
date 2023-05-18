@@ -1,8 +1,10 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const authModels = require("../models/auth.model");
+const usersModel = require("../models/users.model");
 const { jwtSecret } = require("../configs/environtment");
 const { error } = require("../utils/response");
+const db = require("../configs/postgre");
 
 const login = async (req, res) => {
   try {
@@ -52,32 +54,27 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
+  const { body } = req;
+  const client = await db.connect();
   try {
-    const { body } = req;
-    console.log(body.email);
-    if (!body.email) {
-      return error(res, { status: 400, message: "Email is required" });
-    }
-    // cek email duplicates
-    const verificationResult = await authModels.userVerification(body.email);
+    const verificationResult = await authModels.userVerification(body);
     if (verificationResult.rows.length > 0) {
-      return error(res, { status: 400, message: "Duplicate Email" });
+      return error(res, { status: 400, message: "Email has been registered" });
     }
-    // hash password
-    const hashedPassword = await bcrypt.hash(body.password, 10);
-    const result = await authModels.createUsers(
-      body.email,
-      hashedPassword,
-      body.phone_number,
-    );
-    console.log(result.rows[0].id);
+
+    await client.query("BEGIN");
+    const result = await usersModel.insertUsers(client, body);
     const userId = result.rows[0].id;
-    await authModels.insertDetailUsers(userId);
-    return res.status(201).json({
-      message: "User created successfully"
+    await usersModel.insertDetailUsers(client, userId);
+    await client.query("COMMIT");
+    client.release();
+    res.status(200).json({
+      message: "OK",
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err.message);
+    await client.query("ROLLBACK");
+    client.release();
     return error(res, { status: 500, message: "Internal Server Error" });
   }
 };
