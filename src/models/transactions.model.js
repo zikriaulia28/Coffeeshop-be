@@ -68,11 +68,21 @@ const getHistories = (info) => {
   });
 };
 
+const deleteTransaction = (client, info) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = "DELETE FROM transactions WHERE id = $1";
+    client.query(sqlQuery, [info.params.id], (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
 
 module.exports = {
   createTransaction,
   createDetailTransaction,
   getTransaction,
-  // getHistory,
-  getHistories
+  deleteTransaction,
+  getHistories,
 };

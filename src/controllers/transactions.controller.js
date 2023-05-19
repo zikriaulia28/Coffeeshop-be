@@ -54,7 +54,33 @@ const getHistory = async (req, res) => {
   }
 };
 
+const deleteTransaction = async (req, res) => {
+  const client = await db.connect();
+  try {
+    client.query("BEGIN");
+    const result = await transactionsModel.deleteHistory(client, req);
+    if (result.rowCount === 0) {
+      res.status(404).json({
+        msg: "Data Not Found...",
+      });
+      return;
+    }
+    client.query("COMMIT");
+    client.release();
+    res.status(200).json({
+      msg: "Delete Success...",
+    });
+  } catch (err) {
+    console.log(err);
+    client.query("ROLLBACK");
+    res.status(500).json({
+      msg: "Internal Server Error...",
+    });
+  }
+};
+
 module.exports = {
   createTransaction,
-  getHistory
+  getHistory,
+  deleteTransaction,
 };
