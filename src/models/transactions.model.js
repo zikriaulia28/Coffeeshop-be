@@ -54,7 +54,7 @@ const getTransaction = (client, transactionId) => {
 
 const getHistories = (info) => {
   return new Promise((resolve, reject) => {
-    const sqlQuery = `SELECT tps.transaction_id , d.method, p.image, t.created_at, p.name, p.price, tps.product_id, tps.size_id , st.name_status 
+    const sqlQuery = `SELECT DISTINCT ON (tps.transaction_id) tps.transaction_id , d.method, p.image, t.created_at, p.name, p.price, tps.product_id, tps.size_id , st.name_status 
     FROM transactions_products_sizes tps 
     JOIN transactions t  ON t.id = tps.transaction_id 
     JOIN products p ON p.id = tps.product_id
