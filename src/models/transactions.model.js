@@ -34,7 +34,7 @@ const createDetailTransaction = (client, body, transactionId) => {
 const getTransaction = (client, transactionId) => {
   return new Promise((resolve, reject) => {
     // eslint-disable-next-line no-unused-vars
-    const sql = `select u.email, pf.address, p.name as product, s.name as size, pr.code as promo, py.method as payment_method, st.name as transaction_status, tps.qty, tps.subtotal 
+    const sql = `select u.email, pf.address, p.name as product, s.name as size, pr.code as promo, py.method as payment_method, st.name_status as transaction_status, tps.qty, tps.subtotal 
   from transactions_products_sizes tps
   join transactions t on t.id = tps.transaction_id
   join products p on p.id = tps.product_id
