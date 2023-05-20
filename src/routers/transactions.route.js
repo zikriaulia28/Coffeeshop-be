@@ -8,10 +8,6 @@ const transactionsRouter = Router();
 // /transactions
 transactionsRouter.post("/", checkToken, transactionsController.createTransaction);
 transactionsRouter.get("/", checkToken, transactionsController.getHistory);
-transactionsRouter.delete(
-  "/:id",
-  checkToken,
-  transactionsController.deleteTransaction
-);
+transactionsRouter.delete("/:id", checkToken, transactionsController.deleteTransaction);
 
 module.exports = transactionsRouter;

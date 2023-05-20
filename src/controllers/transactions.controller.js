@@ -58,7 +58,7 @@ const deleteTransaction = async (req, res) => {
   const client = await db.connect();
   try {
     client.query("BEGIN");
-    const result = await transactionsModel.deleteHistory(client, req);
+    const result = await transactionsModel.deleteTransaction(client, req);
     if (result.rowCount === 0) {
       res.status(404).json({
         msg: "Data Not Found...",
