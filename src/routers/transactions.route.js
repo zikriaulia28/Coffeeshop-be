@@ -9,7 +9,7 @@ const transactionsRouter = Router();
 // /transactions
 transactionsRouter.post("/", checkToken, transactionsController.createTransaction);
 transactionsRouter.get("/", checkToken, transactionsController.getHistory);
-transactionsRouter.get("/:id", checkToken, checkRole, transactionsController.getTransactionDetail);
+transactionsRouter.get("/detail/:id", checkToken, checkRole, transactionsController.getDetailTransaction);
 transactionsRouter.get(
   "/get-all-order",
   checkToken,

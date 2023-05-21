@@ -54,19 +54,6 @@ const getHistory = async (req, res) => {
   }
 };
 
-const getTransactionDetail = async (req, res) => {
-  try {
-    const { params } = req;
-    const result = await transactionsModel.getTransactionDetail(params);
-
-    res.status(200).json({
-      data: result.rows,
-    });
-  } catch (error) {
-    return error(res, { status: 500, message: "Internal Server Error" });
-  }
-};
-
 const getAllOrders = async (req, res) => {
   try {
     const result = await transactionsModel.getAllOrder();
@@ -110,6 +97,19 @@ const changeStatusOrders = async (req, res) => {
   }
 };
 
+const getDetailTransaction = async (req, res) => {
+  try {
+    const { params } = req;
+    const result = await transactionsModel.getTransactionById(params);
+
+    res.status(200).json({
+      data: result.rows,
+    });
+  } catch (error) {
+    return error(res, { status: 500, message: "Internal Server Error" });
+  }
+};
+
 const deleteTransaction = async (req, res) => {
   const client = await db.connect();
   try {
@@ -142,5 +142,5 @@ module.exports = {
   changeStatusOrders,
   getAllOrders,
   getDoneOrders,
-  getTransactionDetail,
+  getDetailTransaction,
 };

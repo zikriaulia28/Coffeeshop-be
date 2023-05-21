@@ -77,7 +77,7 @@ const deleteTransaction = (client, info) => {
   });
 };
 
-const getTransactionDetail = (params) => {
+const getTransactionById = (params) => {
   return new Promise((resolve, reject) => {
     const sqlQuery = `SELECT tps.transaction_id , d.method, p.image, t.created_at, p.name, p.price, tps.product_id, tps.size_id
     FROM transactions_products_sizes tps 
@@ -146,5 +146,5 @@ module.exports = {
   getAllOrder,
   getDoneOrder,
   changeStatusOrder,
-  getTransactionDetail
+  getTransactionById,
 };
