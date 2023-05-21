@@ -1,11 +1,21 @@
 const db = require("../configs/postgre");
 
-const getPromo = () => {
+const getPromos = (info) => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT p.id, pr.name , p.description, p.promo_code, p.discount, p.date_start, p.date_end FROM promo p JOIN products pr ON p.product_id = pr.id ORDER BY p.discount ASC LIMIT 3";
-    db.query(sql, (err, result) => {
-      if (err) {
-        reject(err);
+    let showData =
+      `SELECT pr.id, pr.product_id, pr.code, discount, pr.description, pr.expired_at, pd.name, pd.image, pd.price 
+      FROM promos pr 
+      JOIN products pd ON pd.id = pr.product_id 
+      WHERE pr.id <> 1 
+      ORDER BY pr.id `;
+    let order = "ASC";
+    if (info.order === "desc") {
+      order = "DESC";
+    }
+    showData += order;
+    db.query(showData, (error, result) => {
+      if (error) {
+        reject(error);
         return;
       }
       resolve(result);
@@ -13,26 +23,41 @@ const getPromo = () => {
   });
 };
 
-const getPromoId = (params) => {
+const getPromoDetails = (promoId) => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM promo WHERE id = $1";
-    const values = [params.id];
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        reject(err);
+    const showData =
+      `SELECT po.id, pd.name, pd.price, po.code, po.discount, pd.image  
+      FROM promos po 
+      JOIN products pd 
+      ON po.product_id = pd.id 
+      WHERE po.id = $1`;
+    const values = [promoId];
+    db.query(showData, values, (error, result) => {
+      if (error) {
+        reject(error);
         return;
       }
-      resolve(result);
+      resolve(result.rows);
     });
   });
 };
 
-const insertPromo = (data) => {
+
+const addPromo = (data) => {
   return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO promo (product_id, description, promo_code, discount, date_start , date_end) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
-    const values = [data.product_id, data.description, data.promo_code, data.discount, data.date_start, data.date_end];
-    db.query(sql, values, (err, result) => {
-      if (err) return reject(err);
+    const addData =
+      "INSERT INTO promos (product_id, code, discount, description, expired_at) VALUES ($1, UPPER($2), $3, $4, $5) RETURNING *";
+    const values = [
+      data.product_id,
+      data.code,
+      data.discount,
+      data.description,
+      data.expired_at,
+    ];
+    db.query(addData, values, (error, result) => {
+      if (error) {
+        reject(error);
+      }
       resolve(result);
     });
   });
@@ -52,24 +77,55 @@ const updatePromo = (params, body) => {
   });
 };
 
-const deletePromo = (params) => {
+const editPromo = (promoId, data) => {
   return new Promise((resolve, reject) => {
-    const sql = "DELETE FROM promo WHERE id = $1 RETURNING *";
-    const values = [params.id];
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        reject(err);
-        return;
+    data.updated_at = new Date();
+
+    let editData = "UPDATE promos SET ";
+    let values = [];
+    let i = 1;
+    for (const [key, val] of Object.entries(data)) {
+      if (key !== "id") {
+        editData += `${key} = $${i}, `;
+        values.push(val);
+        i++;
+      }
+    }
+    editData = editData.slice(0, -2);
+    editData += ` WHERE id = $${i} RETURNING *`;
+    values.push(promoId);
+    console.log(editData);
+    console.log(values);
+    db.query(editData, values, (error, result) => {
+      if (error) {
+        reject(error);
       }
       resolve(result);
     });
   });
 };
 
+
+
+const deletePromo = (promoId) => {
+  return new Promise((resolve, reject) => {
+    const values = [promoId];
+    db.query("DELETE FROM promos WHERE id = $1", values, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+
+
 module.exports = {
-  getPromo,
-  getPromoId,
-  insertPromo,
+  getPromos,
+  addPromo,
+  getPromoDetails,
   updatePromo,
   deletePromo,
+  editPromo,
 };
