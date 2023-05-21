@@ -111,13 +111,13 @@ const getAllOrder = () => {
 
 const getDoneOrder = () => {
   return new Promise((resolve, reject) => {
-    const sqlQuery = `SELECT DISTINCT ON (t.id) t.id, t.payment_id, d.method, t.created_at, tps.product_id, p.name, p.price, p.image
+    const sqlQuery = `SELECT DISTINCT ON (t.id) t.id, t.status_id , d.method, t.created_at, tps.product_id, p.name, p.price, p.image
     FROM transactions t
     JOIN deliveries d ON d.id = t.delivery_id
     JOIN transactions_products_sizes tps  ON tps.transaction_id= t.id
     JOIN products p ON p.id = tps.product_id
-    WHERE t.payment_id = 2
-    ORDER BY t.id DESC`;
+    WHERE t.status_id = 2
+    ORDER BY t.id desc`;
     db.query(sqlQuery, (error, result) => {
       if (error) return reject(error);
       resolve(result);
