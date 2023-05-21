@@ -77,6 +77,65 @@ const deleteTransaction = (client, info) => {
   });
 };
 
+const getTransactionDetail = (params) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = `SELECT tps.transaction_id , d.method, p.image, t.created_at, p.name, p.price, tps.product_id, tps.size_id
+    FROM transactions_products_sizes tps 
+    JOIN transactions t  ON t.id = tps.transaction_id 
+    JOIN products p ON p.id = tps.product_id
+    JOIN deliveries d ON d.id = t.delivery_id
+    WHERE tps.transaction_id  = $1`;
+    const values = [params.id];
+    db.query(sqlQuery, values, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
+const getAllOrder = () => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = `SELECT DISTINCT ON (t.id) t.id, t.status_id , d.method , t.created_at, tps.product_id , p.name , p.price , p.image 
+    FROM transactions t
+    JOIN deliveries d ON d.id = t.delivery_id 
+    JOIN transactions_products_sizes tps  ON tps.transaction_id = t.id
+    JOIN products p ON p.id = tps.product_id
+    WHERE t.status_id <> 2
+    ORDER BY t.id ASC`;
+    db.query(sqlQuery, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
+const getDoneOrder = () => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = `SELECT DISTINCT ON (t.id) t.id, t.payment_id, d.method, t.created_at, tps.product_id, p.name, p.price, p.image
+    FROM transactions t
+    JOIN deliveries d ON d.id = t.delivery_id
+    JOIN transactions_products_sizes tps  ON tps.transaction_id= t.id
+    JOIN products p ON p.id = tps.product_id
+    WHERE t.payment_id = 2
+    ORDER BY t.id DESC`;
+    db.query(sqlQuery, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
+const changeStatusOrder = (info) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery =
+      "UPDATE transaction SET status_id = 2, update_at = NOW() WHERE id = $1 RETURNING *";
+    db.query(sqlQuery, [info.id], (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
 
 module.exports = {
   createTransaction,
@@ -84,4 +143,8 @@ module.exports = {
   getTransaction,
   deleteTransaction,
   getHistories,
+  getAllOrder,
+  getDoneOrder,
+  changeStatusOrder,
+  getTransactionDetail
 };
