@@ -128,7 +128,7 @@ const getDoneOrder = () => {
 const changeStatusOrder = (info) => {
   return new Promise((resolve, reject) => {
     const sqlQuery =
-      "UPDATE transaction SET status_id = 2, updated_at = NOW() WHERE id = $1 RETURNING *";
+      "UPDATE transactions SET status_id = 2, updated_at = NOW() WHERE id = $1 RETURNING *";
     db.query(sqlQuery, [info.id], (error, result) => {
       if (error) return reject(error);
       resolve(result);
