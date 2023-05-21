@@ -202,6 +202,22 @@ const forgotPwd = async (req, res) => {
   }
 };
 
+const loginFirebase = async (req, res) => {
+  try {
+    const { body } = req;
+    const result = await authModels.loginFirebase(body.token_fcm, body.user_id);
+    res.status(200).json({
+      msg: "Login firebase success",
+      data: result.rows,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      msg: "Internal Server Error...",
+    });
+  }
+};
+
 module.exports = {
   login,
   register,
@@ -209,5 +225,6 @@ module.exports = {
   editPassword,
   checkRole,
   createOTP,
-  forgotPwd
+  forgotPwd,
+  loginFirebase,
 };

@@ -14,6 +14,7 @@ authRouter.patch("/", authMiddleware.checkToken, authController.editPassword);
 
 authRouter.patch("/otp", authController.createOTP);
 authRouter.patch("/forgot", authController.forgotPwd);
+authRouter.patch("/login-firebase", authController.loginFirebase);
 
 // private 
 authRouter.get("/private", authMiddleware.checkToken, authController.privateAccess);

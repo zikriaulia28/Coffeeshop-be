@@ -120,6 +120,17 @@ const forgotPwd = (email, password) => {
   });
 };
 
+const loginFirebase = (tokenFcm, userId) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = "UPDATE users SET token_fcm = $1 WHERE id = $2";
+    const values = [tokenFcm, userId];
+    db.query(sqlQuery, values, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
 
 module.exports = {
   userVerification,
@@ -131,5 +142,6 @@ module.exports = {
   createOTP,
   getOTP,
   deleteOTP,
-  forgotPwd
+  forgotPwd,
+  loginFirebase,
 };
