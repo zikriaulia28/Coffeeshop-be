@@ -30,7 +30,7 @@ const getPromoDetails = (promoId) => {
       FROM promos po 
       JOIN products pd 
       ON po.product_id = pd.id 
-      WHERE po.id = $1`;
+      WHERE po.id_promo = $1`;
     const values = [promoId];
     db.query(showData, values, (error, result) => {
       if (error) {
