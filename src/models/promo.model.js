@@ -3,11 +3,11 @@ const db = require("../configs/postgre");
 const getPromos = (info) => {
   return new Promise((resolve, reject) => {
     let showData =
-      `SELECT pr.id, pr.product_id, pr.code, discount, pr.description, pr.expired_at, pd.name, pd.image, pd.price 
+      `SELECT pr.id_promo, pr.product_id, pr.code, discount, pr.description, pr.expired_at, pd.name, pd.image, pd.price 
       FROM promos pr 
       JOIN products pd ON pd.id = pr.product_id 
-      WHERE pr.id <> 1 
-      ORDER BY pr.id `;
+      WHERE pr.id_promo <> 1 
+      ORDER BY pr.id_promo `;
     let order = "ASC";
     if (info.order === "desc") {
       order = "DESC";
