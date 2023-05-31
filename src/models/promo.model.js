@@ -26,7 +26,7 @@ const getPromos = (info) => {
 const getPromoDetails = (promoId) => {
   return new Promise((resolve, reject) => {
     const showData =
-      `SELECT po.id, pd.name, pd.price, po.code, po.discount, pd.image, po.product_id  
+      `SELECT po.id, pd.name, pd.price, po.code, po.discount, po.description, pd.image, po.product_id  
       FROM promos po 
       JOIN products pd 
       ON po.product_id = pd.id 
