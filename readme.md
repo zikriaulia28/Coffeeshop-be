@@ -33,6 +33,14 @@ DB_PORT = [your database port]
 DB_USER = [your database username]
 DB_PASS = [your database password]
 SERVER_PORT = [your server port]
+JWT_SECRET = [your JWT secret]
+MONGO_PASS = [your MongoDB password]
+MONGO_DBNAME = [your MongoDB name]
+MONGO_HOST = [your MongoDB host]
+MONGO_USER = [your MongoDB name]
+CLOUD_NAME = [your Cloudinary name]
+CLOUD_KEY = [your Cloudinary key]
+CLOUD_SECRET = [your Cloudinary secret]
 ```
 
 <p>5. Run With npm</p>
@@ -40,6 +48,10 @@ SERVER_PORT = [your server port]
 ```
 npm run dev
 ```
+
+<h2>Postman Documentation</h2>
+
+You can click [here!](https://documenter.getpostman.com/view/26102451/2s93saZsdr)
 
 <h2>💻 Built with</h2>
 
