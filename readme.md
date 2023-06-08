@@ -4,7 +4,7 @@
 
 <p align="center"><img src="https://img.shields.io/badge/node.js-v.18.14.2-brightgreen" alt="shields"><img src="https://img.shields.io/badge/express.js-v.4.18.2-brightgreen" alt="shields"><img src="https://img.shields.io/badge/dotenv-v.16.0.3-brightgreen" alt="shields"><img src="https://img.shields.io/badge/pg-v.8.9.0-brightgreen" alt="shields"><img src="https://img.shields.io/badge/nodemon-v.2.0.21-brightgreen" alt="shields"><img src="https://img.shields.io/badge/eslint-v.8.35.0-brightgreen" alt="shields"></p>
 
-<p>APIs for website and mobile applications, including auth, product, transaction and others</p>
+<p>This repository contains codes for "Coffee Shop" [website](https://github.com/zikriaulia28/Coffeshop-fe) / [mobile app](https://github.com/zikriaulia28/CoffeeShop-Mobile) server</p>
 
 <h2>🛠️ Installation Steps:</h2>
 
