@@ -2,12 +2,15 @@
 
 <img src="./public//icon-coffee.svg" alt="Logo" width="80" height="80">
 
+<br/>
+<br/>
+
 [![Tech Stack](https://skillicons.dev/icons?i=nodejs,express,mongodb,postgres,vercel,firebase)](#tech-stack)
 
 <h2>Coffee Shop.</h2>
 <h3 align="center">Rest API for Coffee app!</h3>
 
-[Demo](https://jokopi.vercel.app/) · [Related Projects](#related-projects)
+[Demo](https://webcoffee-api.vercel.app/) · [Related Projects](#related-projects)
 
 </div>
 
@@ -48,7 +51,6 @@ The REST API adheres to the principles of Representational State Transfer (REST)
 - [Cloudinary](https://cloudinary.com/) (for storing images)
 - [JSON Web Token](https://jwt.io/) (authorization)
 - [Vercel](https://vercel.com/) (for deploying)
-- [Nodemailer](https://nodemailer.com/about/) (email sender)
 - [Firebase Admin](https://github.com/firebase/firebase-admin-node) (for sending remote notification)
 - and other packages (you can see in package.json)
 
@@ -60,7 +62,6 @@ The REST API adheres to the principles of Representational State Transfer (REST)
 - [PostgreSQL](https://www.postgresql.org/)
 - [MongoDB](https://www.mongodb.com/)
 - [Cloudinary](https://cloudinary.com/)
-- [SMTP](https://nodemailer.com/usage/why-smtp/)
 - [Firebase Account](https://firebase.google.com/)
 
 ### Instalation
