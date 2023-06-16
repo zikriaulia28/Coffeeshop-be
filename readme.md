@@ -99,27 +99,19 @@ The REST API adheres to the principles of Representational State Transfer (REST)
 
     - Database server using MongoDB [[you can create account in here]](<https://mongodb.com>)
 
-           ```env
-           MONGO_PASS = [your MongoDB password]
-
+      ```env
+      MONGO_PASS = [your MongoDB password]
       MONGO_DBNAME = [your MongoDB name]
       MONGO_HOST = [your MongoDB host]
       MONGO_USER = [your MongoDB name]
-
-      ```
-
       ```
 
     - Image server using Cloudinary [[you can create account in here]](<https://cloudinary.com/>)
 
-           ```env
-           CLOUD_NAME = [your Cloudinary name]
-
+      ```env
+      CLOUD_NAME = [your Cloudinary name]
       CLOUD_KEY = [your Cloudinary key]
       CLOUD_SECRET = [your Cloudinary secret]
-
-      ```
-
       ```
 
     - Firebase Admin (generate service-account json and encode base64) [[see more]](<https://firebase.google.com/docs/admin/setup#initialize_the_sdk_in_non-google_environments>)
