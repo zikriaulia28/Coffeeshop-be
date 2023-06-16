@@ -161,7 +161,7 @@ You can click [here!](https://documenter.getpostman.com/view/26102451/2s93saZsdr
 ## Related Projects
 
 - [website](https://github.com/zikriaulia28/Coffeshop-fe)
-- [mobile app](https://github.com/zikriaulia28/CoffeeShop-Mobile) server
+- [mobile app](https://github.com/zikriaulia28/CoffeeShop-Mobile)
 
 ## License
 
