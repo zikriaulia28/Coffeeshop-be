@@ -82,17 +82,13 @@ The REST API adheres to the principles of Representational State Transfer (REST)
 
     - Database server using postgreSQL
 
-           ```env
-           DB_HOST = [your database host]
-
+      ```env
+      DB_HOST = [your database host]
       DB_NAME = [your database name]
       DB_PORT = [your database port]
       DB_USER = [your database username]
       DB_PASS = [your database password]
       SERVER_PORT = [your server port]
-
-      ```
-
       ```
 
     - JSON Web Token Secret Key (prefer using random string) [[see more information]](<https://jwt.io/introduction>)
