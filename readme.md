@@ -29,9 +29,9 @@
 
 ## About Project
 
-"A coffee shop's backend server implementation, built with the Express framework, is a REST API that offers a reliable and scalable solution for handling different aspects of the coffee shop's operations. These operations include managing menu items, orders, customer details, and more.
+A coffee shop's backend server implementation, built with the Express framework, is a REST API that offers a reliable and scalable solution for handling different aspects of the coffee shop's operations. These operations include managing menu items, orders, customer details, and more.
 
-The REST API adheres to the principles of Representational State Transfer (REST), enabling seamless integration with diverse clients, such as web and mobile applications. It leverages the HTTP protocol to facilitate communication, enabling clients to perform various operations like retrieving, creating, updating, and deleting resources."
+The REST API adheres to the principles of Representational State Transfer (REST), enabling seamless integration with diverse clients, such as web and mobile applications. It leverages the HTTP protocol to facilitate communication, enabling clients to perform various operations like retrieving, creating, updating, and deleting resources.
 
 ### Features
 
